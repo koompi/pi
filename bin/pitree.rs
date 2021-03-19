@@ -18,17 +18,17 @@ fn main() {
     let file = File::open("data.yml").unwrap();
     let data: Store = serde_yaml::from_reader(file).unwrap();
 
-    let mut depgraph: DepGraph<&str> = DepGraph::new();
+    let mut depgraph: DepGraph<String> = DepGraph::new();
 
     for app in data.apps.iter() {
         if let Some(data) = &app.deps {
-            let cdeps: Vec<&str> = data.iter().map(|d| d.as_str().clone()).collect();
+            // let cdeps: Vec<Str> = data.iter().map(|d| d.as_str().clone()).collect();
 
-            depgraph.register_dependencies(&app.name, cdeps);
+            depgraph.register_dependencies(app.name.clone(), data.to_vec());
         }
     }
     let mut deps: Vec<String> = Vec::new();
-    for node in depgraph.dependencies_of(&"systemd").unwrap() {
+    for node in depgraph.dependencies_of(&String::from("systemd")).unwrap() {
         deps.push(node.unwrap().to_string())
     }
 

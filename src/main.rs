@@ -16,6 +16,7 @@ mod source;
 pub use application::Application;
 pub use architecture::Architecture;
 pub use build_file::BuildFile;
+pub use database::Database;
 pub use dependency::Dependency;
 pub use deployment::Deployment;
 pub use function::Function;
