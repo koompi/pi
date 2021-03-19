@@ -1,0 +1,1074 @@
+---
+apps:
+  - name: sdparm
+    deps:
+      - glibc
+      - bash
+  - name: rpcbind
+    deps:
+      - bash
+      - glibc
+      - libtirpc
+      - systemd-libs
+  - name: libssh2
+    deps:
+      - openssl
+      - zlib
+  - name: gpm
+    deps:
+      - bash
+      - procps-ng
+  - name: psmisc
+    deps:
+      - ncurses
+  - name: patch
+    deps:
+      - glibc
+      - attr
+  - name: inetutils
+    deps:
+      - pam
+      - libcap
+  - name: libassuan
+    deps:
+      - glibc
+      - libgpg-error
+  - name: logrotate
+    deps:
+      - popt
+      - gzip
+      - acl
+  - name: perl
+    deps:
+      - gdbm
+      - db
+      - glibc
+      - libxcrypt
+  - name: hdparm
+    deps:
+      - glibc
+  - name: vi
+    deps:
+      - ncurses
+  - name: libtirpc
+    deps:
+      - krb5
+  - name: libgssglue
+    deps:
+      - glibc
+  - name: kmod
+    deps:
+      - glibc
+      - zlib
+      - openssl
+      - xz
+      - zstd
+  - name: less
+    deps:
+      - glibc
+      - ncurses
+      - pcre
+  - name: libnfnetlink
+    deps:
+      - glibc
+  - name: icu
+    deps:
+      - gcc-libs
+      - bash
+  - name: ca-certificates-utils
+    deps:
+      - bash
+      - coreutils
+      - findutils
+      - p11-kit
+  - name: gcc-d
+    deps:
+      - gcc
+  - name: dmraid
+    deps:
+      - device-mapper
+  - name: ifenslave
+    deps: ~
+  - name: ed
+    deps:
+      - glibc
+      - bash
+  - name: mdadm
+    deps:
+      - glibc
+  - name: expat
+    deps:
+      - glibc
+  - name: ncurses
+    deps:
+      - glibc
+      - gcc-libs
+  - name: libevent
+    deps:
+      - openssl
+  - name: e2fsprogs
+    deps:
+      - bash
+      - util-linux-libs
+  - name: attr
+    deps:
+      - glibc
+  - name: shadow
+    deps:
+      - pam
+      - acl
+      - audit
+      - libcap-ng
+      - libxcrypt
+  - name: libcap
+    deps:
+      - glibc
+      - pam
+  - name: m4
+    deps:
+      - glibc
+      - bash
+  - name: libarchive
+    deps:
+      - acl
+      - bzip2
+      - expat
+      - lz4
+      - openssl
+      - xz
+      - zlib
+      - zstd
+  - name: xz
+    deps:
+      - bash
+  - name: bison
+    deps:
+      - glibc
+      - m4
+      - bash
+  - name: python-audit
+    deps:
+      - python
+      - audit
+  - name: coreutils
+    deps:
+      - glibc
+      - acl
+      - attr
+      - gmp
+      - libcap
+      - openssl
+  - name: json-c
+    deps:
+      - glibc
+  - name: keyutils
+    deps:
+      - glibc
+      - bash
+  - name: gettext
+    deps:
+      - gcc-libs
+      - acl
+      - bash
+      - glib2
+      - libunistring
+      - libcroco
+  - name: automake
+    deps:
+      - perl
+      - bash
+  - name: efibootmgr
+    deps:
+      - glibc
+      - popt
+      - efivar
+  - name: nspr
+    deps:
+      - glibc
+      - bash
+  - name: traceroute
+    deps:
+      - glibc
+  - name: wpa_supplicant
+    deps:
+      - openssl
+      - dbus
+      - readline
+      - libnl
+  - name: base
+    deps:
+      - filesystem
+      - gcc-libs
+      - glibc
+      - bash
+      - coreutils
+      - file
+      - findutils
+      - gawk
+      - grep
+      - procps-ng
+      - sed
+      - tar
+      - gettext
+      - pciutils
+      - psmisc
+      - shadow
+      - util-linux
+      - bzip2
+      - gzip
+      - xz
+      - licenses
+      - pacman
+      - systemd
+      - systemd-sysvcompat
+      - iputils
+      - iproute2
+  - name: gcc-fortran
+    deps:
+      - gcc
+  - name: jfsutils
+    deps:
+      - util-linux
+  - name: kbd
+    deps:
+      - glibc
+      - pam
+  - name: pptpclient
+    deps:
+      - ppp
+      - iproute2
+      - perl
+  - name: ppp
+    deps:
+      - glibc
+      - libpcap
+      - libxcrypt
+      - openssl
+  - name: glib2
+    deps:
+      - pcre
+      - libffi
+      - util-linux-libs
+      - zlib
+      - util-linux-libs
+  - name: run-parts
+    deps:
+      - glibc
+  - name: mlocate
+    deps:
+      - glibc
+  - name: libmpc
+    deps:
+      - mpfr
+  - name: libgcrypt
+    deps:
+      - libgpg-error
+  - name: tzdata
+    deps: ~
+  - name: pinentry
+    deps:
+      - ncurses
+      - libcap
+      - libassuan
+      - libsecret
+  - name: ca-certificates
+    deps:
+      - ca-certificates-mozilla
+  - name: openssh
+    deps:
+      - glibc
+      - krb5
+      - openssl
+      - libedit
+      - ldns
+      - libxcrypt
+      - zlib
+      - pam
+  - name: qgpgme
+    deps:
+      - gpgme
+      - qt5-base
+  - name: cracklib
+    deps:
+      - glibc
+      - zlib
+  - name: lemon
+    deps:
+      - glibc
+  - name: pciutils
+    deps:
+      - glibc
+      - hwids
+      - kmod
+  - name: cronie
+    deps:
+      - pam
+      - bash
+      - run-parts
+  - name: openssl-1.0
+    deps:
+      - perl
+  - name: libtool
+    deps:
+      - bash
+      - tar
+      - glibc
+  - name: libgpg-error
+    deps:
+      - glibc
+      - bash
+  - name: gcc
+    deps:
+      - gcc-libs
+      - binutils
+      - libmpc
+  - name: iptables
+    deps:
+      - libnftnl
+      - libpcap
+      - libnfnetlink
+      - libnetfilter_conntrack
+      - bash
+  - name: libmicrohttpd
+    deps:
+      - gnutls
+  - name: linux-headers
+    deps:
+      - pahole
+  - name: gssproxy
+    deps:
+      - krb5
+      - popt
+      - ding-libs
+  - name: libpcap
+    deps:
+      - glibc
+      - libnl
+      - bash
+      - dbus
+  - name: pth
+    deps:
+      - glibc
+      - gawk
+  - name: lzo
+    deps:
+      - glibc
+  - name: pambase
+    deps: ~
+  - name: grep
+    deps:
+      - glibc
+      - pcre
+  - name: diffutils
+    deps:
+      - glibc
+      - bash
+  - name: libpsl
+    deps:
+      - libidn2
+      - libunistring
+  - name: ca-certificates-mozilla
+    deps:
+      - ca-certificates-utils
+  - name: krb5
+    deps:
+      - glibc
+      - e2fsprogs
+      - libldap
+      - keyutils
+  - name: sqlite-analyzer
+    deps:
+      - sqlite
+      - tcl
+  - name: s-nail
+    deps:
+      - openssl
+      - krb5
+      - libidn2
+  - name: wireless-regdb
+    deps:
+      - bash
+  - name: wireless_tools
+    deps: ~
+  - name: linux-api-headers
+    deps: ~
+  - name: nilfs-utils
+    deps:
+      - util-linux
+  - name: file
+    deps:
+      - glibc
+      - zlib
+      - xz
+      - bzip2
+      - libseccomp
+  - name: libusb
+    deps:
+      - glibc
+      - systemd-libs
+  - name: libinih
+    deps:
+      - gcc-libs
+      - glibc
+  - name: libnl
+    deps:
+      - glibc
+  - name: texinfo
+    deps:
+      - ncurses
+      - gzip
+      - perl
+      - bash
+  - name: linux-lts-headers
+    deps: ~
+  - name: util-linux
+    deps:
+      - pam
+      - shadow
+      - coreutils
+      - systemd-libs
+      - libcap-ng
+      - libxcrypt
+      - util-linux-libs
+      - file
+      - ncurses
+      - readline
+  - name: autoconf
+    deps:
+      - gawk
+      - m4
+      - diffutils
+      - perl
+      - bash
+  - name: nfs-utils
+    deps:
+      - rpcbind
+      - nfsidmap
+      - gssproxy
+      - libevent
+      - device-mapper
+  - name: which
+    deps:
+      - glibc
+      - bash
+  - name: libedit
+    deps:
+      - glibc
+      - ncurses
+  - name: pacman
+    deps:
+      - bash
+      - glibc
+      - libarchive
+      - curl
+      - gpgme
+      - pacman-mirrorlist
+      - archlinux-keyring
+  - name: npth
+    deps:
+      - glibc
+      - bash
+  - name: libunistring
+    deps:
+      - glibc
+  - name: nettle
+    deps:
+      - gmp
+  - name: gzip
+    deps:
+      - glibc
+      - bash
+      - less
+  - name: linux
+    deps:
+      - coreutils
+      - kmod
+      - mkinitcpio
+  - name: lvm2
+    deps:
+      - bash
+      - device-mapper
+      - systemd-libs
+      - util-linux-libs
+      - readline
+      - thin-provisioning-tools
+  - name: openssl
+    deps:
+      - glibc
+  - name: ldns
+    deps:
+      - openssl
+      - dnssec-anchors
+  - name: ipw2100-fw
+    deps: ~
+  - name: xfsprogs
+    deps:
+      - bash
+      - util-linux-libs
+      - icu
+      - device-mapper
+      - libinih
+  - name: man-db
+    deps:
+      - bash
+      - gdbm
+      - zlib
+      - groff
+      - libpipeline
+      - less
+      - libseccomp
+  - name: iputils
+    deps:
+      - libcap
+      - libidn2
+  - name: sqlite-doc
+    deps: ~
+  - name: util-linux-libs
+    deps: ~
+  - name: netctl
+    deps:
+      - coreutils
+      - iproute2
+      - openresolv
+      - systemd
+  - name: iana-etc
+    deps: ~
+  - name: libpipeline
+    deps:
+      - glibc
+  - name: dash
+    deps:
+      - glibc
+      - libedit
+  - name: syslinux
+    deps: ~
+  - name: minizip
+    deps:
+      - zlib
+  - name: openldap
+    deps:
+      - libldap
+      - libtool
+      - unixodbc
+      - perl
+  - name: curl
+    deps:
+      - ca-certificates
+      - krb5
+      - libssh2
+      - openssl
+      - zlib
+      - libpsl
+      - libnghttp2
+      - libidn2
+      - zstd
+  - name: groff
+    deps:
+      - perl
+      - gcc-libs
+  - name: systemd-sysvcompat
+    deps:
+      - systemd
+  - name: thin-provisioning-tools
+    deps:
+      - expat
+      - gcc-libs
+      - libaio
+  - name: bzip2
+    deps:
+      - glibc
+      - bash
+  - name: grub
+    deps:
+      - bash
+      - xz
+      - gettext
+      - device-mapper
+  - name: procps-ng
+    deps:
+      - glibc
+      - ncurses
+      - systemd-libs
+  - name: lib32-glibc
+    deps:
+      - glibc
+  - name: archlinux-keyring
+    deps: ~
+  - name: openresolv
+    deps:
+      - bash
+  - name: hwids
+    deps: ~
+  - name: libsecret
+    deps:
+      - glib2
+      - libgcrypt
+  - name: libaio
+    deps: ~
+  - name: licenses
+    deps: ~
+  - name: dialog
+    deps:
+      - bash
+      - ncurses
+  - name: lz4
+    deps:
+      - glibc
+  - name: iproute2
+    deps:
+      - glibc
+      - iptables
+      - libelf
+  - name: gcc-go
+    deps:
+      - gcc
+  - name: crda
+    deps:
+      - wireless-regdb
+      - libnl
+      - libgcrypt
+      - systemd
+      - iw
+  - name: efivar
+    deps:
+      - glibc
+  - name: sqlite
+    deps:
+      - readline
+      - zlib
+  - name: findutils
+    deps:
+      - glibc
+      - bash
+  - name: libseccomp
+    deps:
+      - glibc
+  - name: libnetfilter_conntrack
+    deps:
+      - libnfnetlink
+      - libmnl
+  - name: nfsidmap
+    deps:
+      - libldap
+      - krb5
+  - name: popt
+    deps:
+      - glibc
+  - name: flex
+    deps:
+      - glibc
+      - m4
+      - bash
+  - name: gcc-ada
+    deps:
+      - gcc
+  - name: ipw2200-fw
+    deps: ~
+  - name: glib2-docs
+    deps: ~
+  - name: libksba
+    deps:
+      - bash
+      - libgpg-error
+      - glibc
+  - name: libnsl
+    deps:
+      - libtirpc
+  - name: sysfsutils
+    deps:
+      - glibc
+  - name: systemd-resolvconf
+    deps:
+      - systemd
+  - name: linux-firmware
+    deps: ~
+  - name: usbutils
+    deps:
+      - glibc
+      - hwids
+      - libusb
+      - systemd-libs
+  - name: acl
+    deps:
+      - attr
+  - name: gnupg
+    deps:
+      - npth
+      - libgpg-error
+      - libgcrypt
+      - libksba
+      - libassuan
+      - pinentry
+      - bzip2
+      - readline
+      - gnutls
+      - sqlite
+      - zlib
+      - glibc
+  - name: pcre
+    deps:
+      - gcc-libs
+      - readline
+      - zlib
+      - bzip2
+      - bash
+  - name: libxcrypt
+    deps:
+      - glibc
+  - name: sudo
+    deps:
+      - glibc
+      - libgcrypt
+      - pam
+      - libldap
+      - zlib
+  - name: gcc-libs
+    deps:
+      - glibc
+  - name: make
+    deps:
+      - glibc
+      - guile
+  - name: systemd
+    deps:
+      - acl
+      - bash
+      - cryptsetup
+      - dbus
+      - iptables
+      - kbd
+      - kmod
+      - hwids
+      - libcap
+      - libgcrypt
+      - libxcrypt
+      - systemd-libs
+      - libidn2
+      - lz4
+      - pam
+      - libelf
+      - libseccomp
+      - util-linux
+      - util-linux-libs
+      - xz
+      - pcre2
+      - audit
+      - libp11-kit
+      - openssl
+  - name: libmnl
+    deps:
+      - glibc
+  - name: filesystem
+    deps:
+      - iana-etc
+  - name: python-gpgme
+    deps:
+      - gpgme
+      - python
+  - name: glibc
+    deps:
+      - linux-api-headers
+      - tzdata
+      - filesystem
+  - name: gdbm
+    deps:
+      - glibc
+      - bash
+      - readline
+  - name: db
+    deps:
+      - gcc-libs
+      - bash
+  - name: pcre2
+    deps:
+      - gcc-libs
+      - readline
+      - zlib
+      - bzip2
+      - bash
+  - name: nss
+    deps:
+      - nspr
+      - sqlite
+      - zlib
+      - bash
+      - p11-kit
+  - name: zlib
+    deps:
+      - glibc
+  - name: libnftnl
+    deps:
+      - libmnl
+  - name: lib32-gcc-libs
+    deps:
+      - lib32-glibc
+  - name: linux-docs
+    deps: ~
+  - name: pacman-mirrorlist
+    deps: ~
+  - name: amd-ucode
+    deps: ~
+  - name: btrfs-progs
+    deps:
+      - glibc
+      - util-linux-libs
+      - lzo
+      - zlib
+      - zstd
+      - libgcrypt
+  - name: sed
+    deps:
+      - glibc
+      - acl
+      - attr
+  - name: tar
+    deps:
+      - glibc
+      - acl
+      - attr
+  - name: gpgme
+    deps:
+      - libgpg-error
+      - gnupg
+  - name: links
+    deps:
+      - bzip2
+      - gpm
+      - libevent
+      - pcre
+      - xz
+  - name: dosfstools
+    deps:
+      - glibc
+  - name: procinfo-ng
+    deps:
+      - ncurses
+      - perl
+  - name: iptables-nft
+    deps:
+      - libnftnl
+      - libpcap
+      - libnfnetlink
+      - libnetfilter_conntrack
+      - bash
+      - nftables
+  - name: linux-lts-docs
+    deps: ~
+  - name: systemd-libs
+    deps:
+      - glibc
+      - libcap
+      - libgcrypt
+      - lz4
+      - xz
+      - zstd
+  - name: cryptsetup
+    deps:
+      - device-mapper
+      - openssl
+      - popt
+      - util-linux-libs
+      - json-c
+      - argon2
+  - name: libelf
+    deps:
+      - gcc-libs
+      - bzip2
+      - curl
+      - xz
+      - zlib
+      - zstd
+  - name: gawk
+    deps:
+      - bash
+      - glibc
+      - mpfr
+  - name: net-tools
+    deps:
+      - glibc
+  - name: mkinitcpio-nfs-utils
+    deps:
+      - glibc
+  - name: libffi
+    deps:
+      - glibc
+  - name: sqlite-tcl
+    deps:
+      - sqlite
+  - name: b43-fwcutter
+    deps:
+      - glibc
+  - name: libnghttp2
+    deps:
+      - glibc
+  - name: mkinitcpio
+    deps:
+      - gawk
+      - mkinitcpio-busybox
+      - kmod
+      - util-linux
+      - libarchive
+      - coreutils
+      - bash
+      - diffutils
+      - findutils
+      - grep
+      - filesystem
+      - zstd
+      - systemd
+  - name: libsasl
+    deps:
+      - openssl
+  - name: elfutils
+    deps:
+      - gcc-libs
+      - glibc
+      - libarchive
+      - libelf
+      - libmicrohttpd
+      - sqlite
+  - name: bash
+    deps:
+      - readline
+      - glibc
+      - ncurses
+  - name: argon2
+    deps:
+      - glibc
+  - name: reiserfsprogs
+    deps:
+      - util-linux
+  - name: libp11-kit
+    deps:
+      - glibc
+      - libtasn1
+      - libffi
+  - name: iw
+    deps:
+      - libnl
+  - name: pam
+    deps:
+      - glibc
+      - libtirpc
+      - pambase
+      - audit
+      - libxcrypt
+  - name: audit
+    deps:
+      - glibc
+      - krb5
+      - libcap-ng
+  - name: libldap
+    deps:
+      - libsasl
+      - e2fsprogs
+  - name: gcc-objc
+    deps:
+      - gcc
+  - name: python-libseccomp
+    deps:
+      - python
+      - libseccomp
+  - name: p11-kit
+    deps:
+      - libp11-kit
+      - coreutils
+      - libp11-kit
+      - systemd-libs
+  - name: mpfr
+    deps:
+      - gmp
+  - name: libtasn1
+    deps:
+      - glibc
+  - name: binutils
+    deps:
+      - glibc
+      - zlib
+      - elfutils
+  - name: ding-libs
+    deps:
+      - glibc
+  - name: gnutls
+    deps:
+      - gcc-libs
+      - libtasn1
+      - readline
+      - zlib
+      - nettle
+      - p11-kit
+      - libidn2
+      - libunistring
+  - name: man-pages
+    deps: ~
+  - name: dhcpcd
+    deps:
+      - glibc
+      - bash
+      - systemd
+      - systemd-libs
+  - name: gmp
+    deps:
+      - gcc-libs
+      - bash
+  - name: dbus-docs
+    deps: ~
+  - name: mkinitcpio-busybox
+    deps:
+      - glibc
+      - libxcrypt
+  - name: linux-lts
+    deps:
+      - coreutils
+      - kmod
+      - mkinitcpio
+  - name: fakeroot
+    deps:
+      - glibc
+      - filesystem
+      - sed
+      - util-linux
+      - bash
+  - name: dnssec-anchors
+    deps: ~
+  - name: libidn2
+    deps:
+      - libunistring
+  - name: zstd
+    deps:
+      - glibc
+      - gcc-libs
+      - zlib
+      - xz
+      - lz4
+  - name: libcap-ng
+    deps:
+      - glibc
+  - name: nano
+    deps:
+      - ncurses
+      - file
+      - bash
+  - name: pkgconf
+    deps:
+      - glibc
+      - bash
+  - name: dbus
+    deps:
+      - systemd-libs
+      - expat
+      - audit
+      - systemd-libs
+      - audit
+  - name: readline
+    deps:
+      - glibc
+      - ncurses
+  - name: unixodbc
+    deps:
+      - readline
+      - libtool
+  - name: device-mapper
+    deps:
+      - glibc
+      - systemd-libs

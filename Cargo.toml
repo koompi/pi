@@ -1,0 +1,39 @@
+[package]
+name = "package-manager"
+version = "0.1.0"
+authors = ["mrrbrilliant <mrrbrilliantwork@gmail.com>"]
+edition = "2018"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+# [[bin]]
+# name = "store"
+# path = "src/bin/store.rs"
+
+[[bin]]
+name = "converter"
+path = "bin/converter.rs"
+
+[[bin]]
+name = "pitree"
+path = "bin/pitree.rs"
+
+[dependencies]
+anyhow = "*"
+colored = "*"
+error-chain = "*"
+git2 = "*"
+indicatif = "*"
+lazy_static = "*"
+reqwest = "*"
+serde = {version = "*", features = ["derive"]}
+serde_yaml = "*"
+sha2 = "*"
+shellfn = "*"
+solvent = "*"
+tar = "*"
+text-diff = "*"
+tokio = {version = "1.2", features = ["full"]}
+url =  "*"
+walkdir = "*"
+zstd = "*"
