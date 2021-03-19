@@ -9,19 +9,7 @@ pub struct OnlineDB {
     applications: Vec<Application>,
 }
 
-impl RegistrDB {
-    pub fn find_by_name(&self, name: String) -> Option<BuildFile> {
-        self.pkgbuilds
-            .iter()
-            .find(|build_file| build_file.metadata.name == name)
-    }
-}
-
-pub struct RegistrDB {
-    applications: Vec<Application>,
-}
-
-impl RegistrDB {
+impl LocalDB {
     pub fn find_by_name(&self, name: String) -> Option<BuildFile> {
         self.pkgbuilds
             .iter()
@@ -54,77 +42,5 @@ impl BuildFileDB {
                 }
             }
         }
-    }
-}
-
-/* Required some Rust code to flatten an array of arbitrarily nested arrays of integers into a flat array of
- * integers. e.g. [[1,2,[3]],4] -> [1,2,3,4].
- */
-
-/* Model of an arbitrarily nested array of arrays, since native arrays in Rust won't allow that.
- * It is a generic type so that it supports all native numeric types.
- */
-enum ArbitrarilyNestedArray<T> {
-    Array(Vec<ArbitrarilyNestedArray<T>>),
-    Integer(T),
-}
-
-/* This will flatten an array of any type implementing the 'Copy' trait, so all numeric
- * types should be covered
- */
-fn flatten<T: Copy>(arr: &ArbitrarilyNestedArray<T>) -> Vec<T> {
-    match arr {
-        // base case
-        &ArbitrarilyNestedArray::Integer(x) => vec![x],
-        // recursive case, flatten each member and concat all of them
-        &ArbitrarilyNestedArray::Array(ref v) => {
-            let mut flat_v = vec![];
-            for a in v {
-                let flat_a = flatten(a);
-                for e in flat_a {
-                    flat_v.push(e);
-                }
-            }
-            flat_v
-        }
-    }
-}
-
-/* Basic tests checking some general cases
- */
-#[cfg(test)]
-mod tests {
-    use super::*;
-
-    #[test]
-    fn empty_array() {
-        let empty_arr: ArbitrarilyNestedArray<u64> = ArbitrarilyNestedArray::Array(vec![]);
-        assert!(flatten(&empty_arr).is_empty());
-    }
-
-    #[test]
-    fn flat_array() {
-        let empty_arr = ArbitrarilyNestedArray::Array(vec![
-            ArbitrarilyNestedArray::Integer(1),
-            ArbitrarilyNestedArray::Integer(2),
-            ArbitrarilyNestedArray::Integer(3),
-        ]);
-        assert_eq!(flatten(&empty_arr), vec!(1, 2, 3));
-    }
-
-    #[test]
-    fn deeply_nested_array() {
-        let empty_arr = ArbitrarilyNestedArray::Array(vec![
-            ArbitrarilyNestedArray::Array(vec![
-                ArbitrarilyNestedArray::Integer(1),
-                ArbitrarilyNestedArray::Integer(2),
-                ArbitrarilyNestedArray::Array(vec![
-                    ArbitrarilyNestedArray::Integer(3),
-                    ArbitrarilyNestedArray::Array(vec![]),
-                ]),
-            ]),
-            ArbitrarilyNestedArray::Integer(4),
-        ]);
-        assert_eq!(flatten(&empty_arr), vec!(1, 2, 3, 4));
     }
 }
