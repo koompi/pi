@@ -1,0 +1,19 @@
+---
+metadata:
+  name: ""
+  version: ""
+  release: 0
+  description: ~
+  architecture: []
+  licenses: []
+  project_url: []
+  project_ownder: []
+sources: ~
+security: ~
+dependencies: ~
+prepare: ~
+build: ~
+check: ~
+package:
+  commands: []
+deployment: ~

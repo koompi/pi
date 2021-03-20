@@ -46,7 +46,7 @@ impl Default for Source {
 }
 
 impl Source {
-    pub async fn perform(&self) {
+    pub async fn pull(&self) {
         match self {
             Source::HTTP {
                 address,
@@ -78,22 +78,22 @@ impl Source {
                     .spawn()
                     .expect("Fialed to download");
             }
-            Source::IPFS {
-                cid,
-                save_as,
-                extract,
-            } => {}
-            Source::FILE {
-                path,
-                save_as,
-                extract,
-            } => {}
-            Source::RSYNC {
-                address,
-                ssh_key,
-                save_as,
-                extract,
-            } => {}
+            _ => {} // Source::IPFS {
+                    //     cid,
+                    //     save_as,
+                    //     extract,
+                    // } => {}
+                    // Source::FILE {
+                    //     path,
+                    //     save_as,
+                    //     extract,
+                    // } => {}
+                    // Source::RSYNC {
+                    //     address,
+                    //     ssh_key,
+                    //     save_as,
+                    //     extract,
+                    // } => {}
         }
     }
 }

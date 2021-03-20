@@ -1,15 +1,16 @@
-use super::{Application};
+use super::Application;
 use serde::{Deserialize, Serialize};
-use std::fs::File;
 use serde_yaml;
 use solvent::DepGraph;
+use std::fs::File;
 
 #[derive(Clone, Debug, Default, Deserialize, Serialize)]
 pub struct Database {
-    applications: Vec<Application>
+    applications: Vec<Application>,
 }
 
 impl Database {
+    // Create
     pub fn new() -> Self {
         Self::default()
     }
@@ -20,13 +21,68 @@ impl Database {
         data
     }
 
-    pub fn initialize_depgraph(&self) -> DepGraph<String> {
+    // Dependencies
+    pub fn run_dependencies(&self) -> DepGraph<String> {
         let mut depgraph: DepGraph<String> = DepGraph::new();
         if !self.applications.is_empty() {
             for app in self.applications.iter() {
                 let name = app.metadata.name.to_string();
                 if let Some(deps) = &app.dependencies {
                     if let Some(run_deps) = &deps.run_dependencies {
+                        let rdeps = run_deps;
+                        depgraph.register_dependencies(name, rdeps.to_vec())
+                    }
+                } else {
+                    depgraph.register_node(name)
+                }
+            }
+        }
+        depgraph
+    }
+
+    pub fn opt_dependencies(&self) -> DepGraph<String> {
+        let mut depgraph: DepGraph<String> = DepGraph::new();
+        if !self.applications.is_empty() {
+            for app in self.applications.iter() {
+                let name = app.metadata.name.to_string();
+                if let Some(deps) = &app.dependencies {
+                    if let Some(run_deps) = &deps.opt_depencies {
+                        let rdeps = run_deps;
+                        depgraph.register_dependencies(name, rdeps.to_vec())
+                    }
+                } else {
+                    depgraph.register_node(name)
+                }
+            }
+        }
+        depgraph
+    }
+
+    pub fn get_build_dependencies(&self) -> DepGraph<String> {
+        let mut depgraph: DepGraph<String> = DepGraph::new();
+        if !self.applications.is_empty() {
+            for app in self.applications.iter() {
+                let name = app.metadata.name.to_string();
+                if let Some(deps) = &app.dependencies {
+                    if let Some(run_deps) = &deps.build_dependencies {
+                        let rdeps = run_deps;
+                        depgraph.register_dependencies(name, rdeps.to_vec())
+                    }
+                } else {
+                    depgraph.register_node(name)
+                }
+            }
+        }
+        depgraph
+    }
+
+    pub fn get_test_dependencies(&self) -> DepGraph<String> {
+        let mut depgraph: DepGraph<String> = DepGraph::new();
+        if !self.applications.is_empty() {
+            for app in self.applications.iter() {
+                let name = app.metadata.name.to_string();
+                if let Some(deps) = &app.dependencies {
+                    if let Some(run_deps) = &deps.test_dependencies {
                         let rdeps = run_deps;
                         depgraph.register_dependencies(name, rdeps.to_vec())
                     }
