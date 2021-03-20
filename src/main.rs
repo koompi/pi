@@ -35,7 +35,8 @@ use utils::prepare_bases;
 // External
 use std::{env, fs::File, path::PathBuf};
 
-fn main() {
+#[tokio::main(flavor = "multi_thread", worker_threads = 10)]
+async fn main() -> Result<(), anyhow::Error> {
     // prepare directories
     prepare_bases(vec![
         #[cfg(debug_assertions)]
@@ -78,14 +79,14 @@ fn main() {
                     let target_package: BuildFile =
                         BuildFile::from_file(PKG_FILE.to_path_buf()).unwrap();
                     target_package.check_makedepends();
-                    // target_package.pull_all().await;
+                    target_package.pull_all().await;
                     // target_package.build();
                     // target_package.to_manifest().write().unwrap();
                     // target_package.create_package();
                 }
             }
             "g" | "generate" | "-g" | "--generate" => {
-                let bf = BuildFile::default();
+                let bf = BuildFile::new();
                 let mut file = File::create("pkgbuild.yml").unwrap();
                 serde_yaml::to_writer(file, &bf).unwrap();
             }
@@ -127,4 +128,6 @@ fn main() {
     } else {
         help("all")
     }
+
+    Ok(())
 }

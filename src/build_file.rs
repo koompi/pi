@@ -1,3 +1,5 @@
+use crate::source;
+
 use super::{
     statics::{MANI_FILE, PKG_DIR, PKG_FILE, SRC_DIR},
     utils::{create_archive, download_git, download_http, read_to_vec_u8},
@@ -28,7 +30,20 @@ pub struct BuildFile {
 
 impl BuildFile {
     pub fn new() -> Self {
-        Self::default()
+        Self {
+            metadata: Metadata::default(),
+            sources: Some(vec![Source::GIT {
+                address: String::from("git://github.com/calamares/calamares"),
+                save_as: String::from("calamares"),
+            }]),
+            security: None,
+            dependencies: None,
+            prepare: None,
+            build: None,
+            check: None,
+            package: Function::default(),
+            deployment: None,
+        }
     }
 
     pub fn from_file(path: PathBuf) -> Result<Self, Error> {

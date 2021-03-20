@@ -9,6 +9,7 @@ use std::{
     path::{Path, PathBuf},
 };
 use tar::Archive;
+use zip::ZipArchive;
 
 pub fn extract_archive(arg_file: &str, dest: &str) -> Result<()> {
     let filename = Path::new(arg_file.trim_end_matches(SUFFIX_APP.as_str()));
@@ -37,6 +38,16 @@ pub fn extract_archive(arg_file: &str, dest: &str) -> Result<()> {
         }),
         Err(e) => return Err(e),
     }
+}
+
+pub fn extract_zip(arg_file: &str, dest: &str) -> Result<()> {
+    let mut decoder = {
+        let file = File::open(arg_file)?;
+        ZipArchive::new(file)?
+    };
+    decoder.extract(dest).unwrap();
+
+    Ok(())
 }
 
 pub fn create_archive(data: &BuildFile, path: PathBuf) {

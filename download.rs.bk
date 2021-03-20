@@ -61,9 +61,7 @@ pub async fn download_http(
         dest.write_all(&chunk).await?;
         pb.inc(chunk.len() as u64);
     }
-
     pb.finish();
-
     Ok(())
 }
 

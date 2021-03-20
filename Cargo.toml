@@ -10,22 +10,28 @@ edition = "2018"
 # name = "store"
 # path = "src/bin/store.rs"
 
-[[bin]]
-name = "converter"
-path = "bin/converter.rs"
+#[[bin]]
+#name = "converter"
+#path = "bin/converter.rs"
 
-[[bin]]
-name = "pitree"
-path = "bin/pitree.rs"
+#[[bin]]
+#name = "pitree"
+#path = "bin/pitree.rs"
+
+# [[bin]]
+# name = "down"
+# path = "bin/down.rs"
 
 [dependencies]
 anyhow = "*"
+bzip2 = "*"
 colored = "*"
 error-chain = "*"
+flate2 = "*"
 git2 = "*"
 indicatif = "*"
 lazy_static = "*"
-reqwest = "*"
+reqwest = "0.11.2"
 serde = {version = "*", features = ["derive"]}
 serde_yaml = "*"
 sha2 = "*"
@@ -33,7 +39,10 @@ shellfn = "*"
 solvent = "*"
 tar = "*"
 text-diff = "*"
-tokio = {version = "1.2", features = ["full"]}
+# tokio = {version = "1.4", features = ["full"]}
+tokio = { version = "1.3.0", features = ["macros", "fs", "io-util", "rt-multi-thread"] }
 url =  "*"
 walkdir = "*"
+xz2 = "*"
+zip = "0.5.10"
 zstd = "*"
