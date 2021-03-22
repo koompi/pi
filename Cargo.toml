@@ -18,11 +18,20 @@ edition = "2018"
 #name = "pitree"
 #path = "bin/pitree.rs"
 
+# [[bin]]
+# name = "down"
+# path = "bin/down.rs"
+
 [[bin]]
-name = "down"
-path = "bin/down.rs"
+name = "bin-repo"
+path = "bin/bin-repo.rs"
+
+[[bin]]
+name = "source-repo"
+path = "bin/source-repo.rs"
 
 [dependencies]
+actix-web = "*"
 anyhow = "*"
 bzip2 = "*"
 colored = "*"

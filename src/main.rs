@@ -3,9 +3,9 @@ pub mod utils;
 
 mod application;
 mod architecture;
+mod bin_database;
 mod build_file;
 mod config;
-mod database;
 mod dependency;
 mod deployment;
 mod function;
@@ -15,13 +15,14 @@ mod metadata;
 mod operations;
 mod security;
 mod source;
+mod source_database;
 mod statics;
 // Local
 pub use application::Application;
 pub use architecture::Architecture;
+pub use bin_database::BinDatabase;
 pub use build_file::BuildFile;
 pub use config::Configuration;
-pub use database::Database;
 pub use dependency::Dependency;
 pub use deployment::Deployment;
 pub use function::Function;
@@ -32,6 +33,7 @@ pub use security::Security;
 pub use source::Source;
 pub use statics::*;
 use utils::prepare_bases;
+
 // External
 use std::{env, fs::File, path::PathBuf};
 use tokio::{fs, io::AsyncWriteExt};
@@ -96,6 +98,11 @@ async fn main() -> std::io::Result<()> {
                         }
                         _ => {
                             // install(pkgs, false).await;
+                            pkgs.iter().for_each(|pkg| {
+                                if let Some(app) = Application::is_installed(&pkg) {
+                                    println!("{:#?}", &app)
+                                }
+                            });
                         }
                     }
                 } else {

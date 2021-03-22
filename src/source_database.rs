@@ -1,15 +1,15 @@
-use super::Application;
+use super::BuildFile;
 use serde::{Deserialize, Serialize};
 use serde_yaml;
 use solvent::DepGraph;
 use std::fs::File;
 
 #[derive(Clone, Debug, Default, Deserialize, Serialize)]
-pub struct Database {
-    applications: Vec<Application>,
+pub struct SourceDatabase {
+    pub applications: Vec<BuildFile>,
 }
 
-impl Database {
+impl SourceDatabase {
     // Create
     pub fn new() -> Self {
         Self::default()
@@ -17,12 +17,12 @@ impl Database {
 
     pub fn from(path: &str) -> Self {
         let file = File::open(path).unwrap();
-        let data: Database = serde_yaml::from_reader(file).unwrap();
+        let data: SourceDatabase = serde_yaml::from_reader(file).unwrap();
         data
     }
 
     // Dependencies
-    pub fn run_dependencies(&self) -> DepGraph<String> {
+    pub fn get_run_dependencies(&self) -> DepGraph<String> {
         let mut depgraph: DepGraph<String> = DepGraph::new();
         if !self.applications.is_empty() {
             for app in self.applications.iter() {
@@ -40,7 +40,7 @@ impl Database {
         depgraph
     }
 
-    pub fn opt_dependencies(&self) -> DepGraph<String> {
+    pub fn get_opt_dependencies(&self) -> DepGraph<String> {
         let mut depgraph: DepGraph<String> = DepGraph::new();
         if !self.applications.is_empty() {
             for app in self.applications.iter() {

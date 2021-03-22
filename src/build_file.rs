@@ -152,37 +152,6 @@ impl BuildFile {
         &self.to_app().write().unwrap();
         &self.create_package();
     }
-    // pub async fn pull_all(&self) {
-    //     if let Some(sources) = &self.sources {
-    //         for source in sources {
-    //             let parsed_url = Url::parse(source).expect("Unable to parse URL");
-    //             let file_name = &parsed_url
-    //                 .path_segments()
-    //                 .unwrap()
-    //                 .last()
-    //                 .expect("Cannot get file name for URL");
-    //             let file_path = SRC_DIR.join(file_name);
-
-    // match parsed_url.scheme() {
-    //     "git" => {
-    //         println!("Cloning {}", &parsed_url.to_string());
-    //         download_git(parsed_url.to_string().as_ref(), file_path.to_str().unwrap())
-    //     }
-    //     "http" | "https" => {
-    //         self.pull_one(
-    //             file_name,
-    //             &file_path.to_str().unwrap().to_string(),
-    //             &parsed_url.to_string(),
-    //         )
-    //         .await;
-    //     }
-    //     _ => {
-    //         println!("Unsupported URL")
-    //     }
-    // }
-    //         }
-    //     }
-    // }
 
     pub fn archive_name(&self) -> String {
         format!(
