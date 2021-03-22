@@ -34,9 +34,10 @@ pub use statics::*;
 use utils::prepare_bases;
 // External
 use std::{env, fs::File, path::PathBuf};
+use tokio::{fs, io::AsyncWriteExt};
 
-#[tokio::main(flavor = "multi_thread", worker_threads = 10)]
-async fn main() -> Result<(), anyhow::Error> {
+#[tokio::main]
+async fn main() -> std::io::Result<()> {
     // prepare directories
     prepare_bases(vec![
         #[cfg(debug_assertions)]
@@ -78,8 +79,8 @@ async fn main() -> Result<(), anyhow::Error> {
                     // help("build");
                     let target_package: BuildFile =
                         BuildFile::from_file(PKG_FILE.to_path_buf()).unwrap();
-                    target_package.check_makedepends();
-                    target_package.pull_all().await;
+                    target_package.build_all().await;
+
                     // target_package.build();
                     // target_package.to_manifest().write().unwrap();
                     // target_package.create_package();
@@ -87,7 +88,7 @@ async fn main() -> Result<(), anyhow::Error> {
             }
             "g" | "generate" | "-g" | "--generate" => {
                 let bf = BuildFile::new();
-                let mut file = File::create("pkgbuild.yml").unwrap();
+                let file = File::create("pkgbuild.yml").unwrap();
                 serde_yaml::to_writer(file, &bf).unwrap();
             }
             "i" | "install" | "-i" | "--install" => {

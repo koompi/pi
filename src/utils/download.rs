@@ -1,7 +1,7 @@
 use anyhow::anyhow;
 use git2::{ErrorCode, Repository};
 use indicatif::{ProgressBar, ProgressStyle};
-use reqwest::{header, Client};
+use reqwest::{header, redirect::Policy, Client};
 use std::fs::remove_dir_all;
 use std::path::Path;
 use tokio::{fs, io::AsyncWriteExt};
@@ -11,7 +11,17 @@ pub async fn download_http(
     app_name: &str,
     address: &str,
 ) -> Result<(), anyhow::Error> {
-    let client = Client::new();
+    let custom = Policy::custom(|attempt| {
+        if attempt.previous().len() > 5 {
+            attempt.error("too many redirects")
+        } else if attempt.url().host_str() == Some("example.domain") {
+            // prevent redirects to 'example.domain'
+            attempt.stop()
+        } else {
+            attempt.follow()
+        }
+    });
+    let client = reqwest::Client::builder().redirect(custom).build()?;
 
     let total_size = {
         let resp = client.head(address).send().await?;
@@ -60,6 +70,7 @@ pub async fn download_http(
     while let Some(chunk) = source.chunk().await? {
         dest.write_all(&chunk).await?;
         pb.inc(chunk.len() as u64);
+        dest.flush().await?;
     }
 
     pb.finish();

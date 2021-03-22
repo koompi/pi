@@ -2,7 +2,7 @@ use crate::source;
 
 use super::{
     statics::{MANI_FILE, PKG_DIR, PKG_FILE, SRC_DIR},
-    utils::{create_archive, download_git, download_http, read_to_vec_u8},
+    utils::{create_archive, decompress_all, download_git, download_http, read_to_vec_u8},
     Application, Dependency, Deployment, Function, Metadata, Security, Source,
 };
 use colored::Colorize;
@@ -15,6 +15,7 @@ use std::{
 };
 use url::Url;
 use walkdir::WalkDir;
+
 #[derive(Clone, Debug, Default, Deserialize, Serialize)]
 pub struct BuildFile {
     pub metadata: Metadata,
@@ -32,9 +33,11 @@ impl BuildFile {
     pub fn new() -> Self {
         Self {
             metadata: Metadata::default(),
-            sources: Some(vec![Source::GIT {
+            sources: Some(vec![Source {
                 address: String::from("git://github.com/calamares/calamares"),
                 save_as: String::from("calamares"),
+                extract: false,
+                extract_to: None,
             }]),
             security: None,
             dependencies: None,
@@ -104,14 +107,49 @@ impl BuildFile {
             .await
             .unwrap()
     }
-    pub async fn pull_all(&self) {
+
+    pub async fn pull_all(&self) -> Result<(), anyhow::Error> {
         if let Some(sources) = &self.sources {
             if !sources.is_empty() {
                 for source in sources.iter() {
-                    source.pull().await;
+                    let parsed_url = Url::parse(&source.address).expect("Unable to parse URL");
+                    let save_as = SRC_DIR.join(&source.save_as);
+                    let extract = source.extract;
+                    let extract_to = SRC_DIR.join(source.extract_to.as_ref().unwrap());
+
+                    match parsed_url.scheme() {
+                        "git" => {
+                            println!("Cloning {}", &parsed_url.to_string());
+                            download_git(parsed_url.to_string().as_ref(), save_as.to_str().unwrap())
+                        }
+                        "http" | "https" => download_http(
+                            save_as.to_str().unwrap(),
+                            &source.save_as,
+                            &parsed_url.to_string(),
+                        )
+                        .await
+                        .unwrap(),
+                        _ => {
+                            println!("Unsupported URL")
+                        }
+                    }
+
+                    if extract {
+                        decompress_all(&save_as.to_str().unwrap(), extract_to.to_str().unwrap());
+                    }
                 }
             }
         }
+
+        Ok(())
+    }
+
+    pub async fn build_all(&self) {
+        &self.check_makedepends();
+        &self.pull_all().await;
+        // target_package.build();
+        // target_package.to_manifest().write().unwrap();
+        // target_package.create_package();
     }
     // pub async fn pull_all(&self) {
     //     if let Some(sources) = &self.sources {
@@ -124,23 +162,23 @@ impl BuildFile {
     //                 .expect("Cannot get file name for URL");
     //             let file_path = SRC_DIR.join(file_name);
 
-    //             match parsed_url.scheme() {
-    //                 "git" => {
-    //                     println!("Cloning {}", &parsed_url.to_string());
-    //                     download_git(parsed_url.to_string().as_ref(), file_path.to_str().unwrap())
-    //                 }
-    //                 "http" | "https" => {
-    //                     self.pull_one(
-    //                         file_name,
-    //                         &file_path.to_str().unwrap().to_string(),
-    //                         &parsed_url.to_string(),
-    //                     )
-    //                     .await;
-    //                 }
-    //                 _ => {
-    //                     println!("Unsupported URL")
-    //                 }
-    //             }
+    // match parsed_url.scheme() {
+    //     "git" => {
+    //         println!("Cloning {}", &parsed_url.to_string());
+    //         download_git(parsed_url.to_string().as_ref(), file_path.to_str().unwrap())
+    //     }
+    //     "http" | "https" => {
+    //         self.pull_one(
+    //             file_name,
+    //             &file_path.to_str().unwrap().to_string(),
+    //             &parsed_url.to_string(),
+    //         )
+    //         .await;
+    //     }
+    //     _ => {
+    //         println!("Unsupported URL")
+    //     }
+    // }
     //         }
     //     }
     // }

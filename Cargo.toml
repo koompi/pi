@@ -18,16 +18,17 @@ edition = "2018"
 #name = "pitree"
 #path = "bin/pitree.rs"
 
-# [[bin]]
-# name = "down"
-# path = "bin/down.rs"
+[[bin]]
+name = "down"
+path = "bin/down.rs"
 
 [dependencies]
 anyhow = "*"
 bzip2 = "*"
 colored = "*"
 error-chain = "*"
-flate2 = "*"
+# flate2 = "*"
+flate2 = { version = "*", features = ["tokio"] }
 git2 = "*"
 indicatif = "*"
 lazy_static = "*"

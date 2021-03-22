@@ -22,11 +22,15 @@ sources:
     #       save_as: calamares-3.2.39.tar.gz
     #       extract: true
     #       extract_to: calamares
-    - HTTP:
-          address: "https://dev.koompi.org/koompi/pix-v1.0.0-1-any.pkg.tar.zst"
-          save_as: pix-v1.0.0-1-any.pkg.tar.zst
-          extract: true
-          extract_to: pix
+    # - HTTP:
+    #       address: "https://dev.koompi.org/koompi/pix-v1.0.0-1-any.pkg.tar.zst"
+    #       save_as: pix-v1.0.0-1-any.pkg.tar.zst
+    #       extract: true
+    #       extract_to: pix
+    - address: https://dev.koompi.org/koompi/pix-v1.0.0-1-any.pkg.tar.zst
+      save_as: pix-v1.0.0-1-any.pkg.tar.zst
+      extract: false
+      extract_to: ""
 security: ~
 dependencies: ~
 check: ~

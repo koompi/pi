@@ -4,7 +4,7 @@ use crate::statics::*;
 use crate::utils::prepare::prepare_base;
 use crate::{Application, BuildFile};
 use std::{
-    fs::{remove_file, File},
+    fs::{create_dir_all, remove_file, File},
     io::{Read, Result},
     path::{Path, PathBuf},
 };
@@ -12,9 +12,12 @@ use tar::Archive;
 use zip::ZipArchive;
 
 pub fn extract_archive(arg_file: &str, dest: &str) -> Result<()> {
-    let filename = Path::new(arg_file.trim_end_matches(SUFFIX_APP.as_str()));
+    let dest_path: PathBuf = PathBuf::from(&dest);
+    if !dest_path.exists() {
+        create_dir_all(&dest).unwrap();
+    }
 
-    let file = File::open(filename)?;
+    let file = File::open(arg_file)?;
     let mut a = Archive::new(file);
 
     match a.entries() {
