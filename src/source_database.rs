@@ -3,16 +3,21 @@ use serde::{Deserialize, Serialize};
 use serde_yaml;
 use solvent::DepGraph;
 use std::fs::File;
+use std::time::SystemTime;
 
-#[derive(Clone, Debug, Default, Deserialize, Serialize)]
+#[derive(Clone, Debug, Deserialize, Serialize)]
 pub struct SourceDatabase {
     pub applications: Vec<BuildFile>,
+    pub date: SystemTime,
 }
 
 impl SourceDatabase {
     // Create
     pub fn new() -> Self {
-        Self::default()
+        Self {
+            applications: Vec::new(),
+            date: SystemTime::now(),
+        }
     }
 
     pub fn from(path: &str) -> Self {

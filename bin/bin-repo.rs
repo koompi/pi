@@ -2,6 +2,7 @@ use package_manager::statics::SUFFIX_APP;
 use package_manager::utils::{decompress_zstd, extract_archive};
 use package_manager::{Application, BinDatabase};
 use serde_yaml::{from_reader, to_writer};
+use std::time::SystemTime;
 use std::{
     env,
     fs::{copy, create_dir_all, File},
@@ -71,7 +72,7 @@ fn create(path: &str) -> Result<(), Error> {
     }
 
     let mut file = File::create(path)?;
-    let data = BinDatabase::default();
+    let data = BinDatabase::new();
     match to_writer(file, &data) {
         Ok(_) => Ok(()),
         Err(e) => Err(Error::new(ErrorKind::Other, e.to_string())),
@@ -148,6 +149,8 @@ fn add(db_path: &str, pkg_files: Vec<PathBuf>) {
 
         std::fs::remove_file(file_name).unwrap();
     }
+    let now = SystemTime::now();
+    db.date = now;
     update_db(db_path, &db);
 }
 
@@ -167,7 +170,8 @@ fn remove(db_path: &str, pkg_files: Vec<PathBuf>) {
             });
         }
     }
-
+    let now = SystemTime::now();
+    db.date = now;
     update_db(db_path, &db);
 }
 

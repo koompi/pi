@@ -1,5 +1,6 @@
 use package_manager::{BuildFile, SourceDatabase};
 use serde_yaml::{from_reader, to_writer};
+use std::time::SystemTime;
 use std::{
     env,
     fs::{copy, create_dir_all, File},
@@ -68,7 +69,7 @@ fn create(path: &str) -> Result<(), Error> {
     }
 
     let file = File::create(path)?;
-    let data = SourceDatabase::default();
+    let data = SourceDatabase::new();
     match to_writer(file, &data) {
         Ok(_) => Ok(()),
         Err(e) => Err(Error::new(ErrorKind::Other, e.to_string())),
@@ -129,6 +130,8 @@ fn add(db_path: &str, pkg_files: Vec<PathBuf>) {
             &db.applications.push(data.clone());
         }
     }
+    let now = SystemTime::now();
+    db.date = now;
     update_db(db_path, &db).unwrap();
 }
 
@@ -149,7 +152,8 @@ fn remove(db_path: &str, pkg_files: Vec<PathBuf>) {
             });
         }
     }
-
+    let now = SystemTime::now();
+    db.date = now;
     update_db(db_path, &db).unwrap();
 }
 

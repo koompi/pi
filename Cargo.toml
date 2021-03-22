@@ -30,13 +30,18 @@ path = "bin/bin-repo.rs"
 name = "source-repo"
 path = "bin/source-repo.rs"
 
+[[bin]]
+name = "server"
+path = "bin/server.rs"
+
 [dependencies]
+actix-files = "*"
 actix-web = "*"
 anyhow = "*"
 bzip2 = "*"
+chrono = "*"
 colored = "*"
 error-chain = "*"
-# flate2 = "*"
 flate2 = { version = "*", features = ["tokio"] }
 git2 = "*"
 indicatif = "*"
