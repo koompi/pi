@@ -22,7 +22,7 @@ pub use application::Application;
 pub use architecture::Architecture;
 pub use bin_database::BinDatabase;
 pub use build_file::BuildFile;
-pub use config::Configuration;
+pub use config::{Configuration, RepoMeta};
 pub use dependency::Dependency;
 pub use deployment::Deployment;
 pub use function::Function;
@@ -32,7 +32,7 @@ pub use metadata::Metadata;
 pub use security::Security;
 pub use source::Source;
 pub use statics::*;
-use utils::prepare_bases;
+use utils::{download_http, prepare_bases};
 
 // External
 use std::{env, fs::File, path::PathBuf};
@@ -54,10 +54,29 @@ async fn main() -> std::io::Result<()> {
         CONF_DIR.to_path_buf(),
     ])
     .unwrap();
-    // preper config file
+    // preper config file if running for the first time
     if !CONF_FILE.as_path().exists() {
         let mut file = File::create(CONF_FILE.as_path()).unwrap();
         serde_yaml::to_writer(&mut file, &Configuration::gen()).unwrap()
+    }
+
+    // read the config
+    let rdr = File::open(CONF_FILE.as_path()).unwrap();
+    let repo_config: Configuration = serde_yaml::from_reader(rdr).unwrap();
+    // check if all repo listed in config file existed or download it
+    for repo in repo_config.repos.iter() {
+        let db_file_path = SYNC_DIR.join(format!("{}.db", &repo.name));
+
+        let address = format!("{}/{}.db", &repo.address, &repo.name);
+        if !db_file_path.exists() {
+            download_http(
+                db_file_path.to_str().unwrap(),
+                &format!("{}.db", &repo.name),
+                &address,
+            )
+            .await
+            .unwrap();
+        }
     }
 
     let args: Vec<String> = env::args_os()
