@@ -88,18 +88,18 @@ impl BuildFile {
         let release = self.metadata.release;
         if let Some(prepare_script) = &self.prepare {
             println!("{}", "PREPARING BUILD".green().bold());
-            prepare_script.exec(&name, &version, release).unwrap();
+            prepare_script.exec(&self).unwrap();
         }
         if let Some(build_script) = &self.build {
             println!("{}", "RUNNING BUILD".green().bold());
-            build_script.exec(&name, &version, release).unwrap();
+            build_script.exec(&self).unwrap();
         }
         if let Some(check_script) = &self.check {
             println!("{}", "CHECKING BUILD".green().bold());
-            check_script.exec(&name, &version, release).unwrap();
+            check_script.exec(&self).unwrap();
         }
         println!("{}", "PACKING BUILD".green().bold());
-        self.package.exec(&name, &version, release).unwrap();
+        self.package.exec(&self).unwrap();
     }
 
     pub async fn pull_one(&self, app_name: &str, path_name: &str, source_address: &str) {
@@ -135,7 +135,8 @@ impl BuildFile {
                     }
 
                     if extract {
-                        decompress_all(&save_as.to_str().unwrap(), extract_to.to_str().unwrap());
+                        decompress_all(&save_as.to_str().unwrap(), extract_to.to_str().unwrap())
+                            .unwrap();
                     }
                 }
             }
@@ -147,9 +148,9 @@ impl BuildFile {
     pub async fn build_all(&self) {
         &self.check_makedepends();
         &self.pull_all().await;
-        // target_package.build();
-        // target_package.to_manifest().write().unwrap();
-        // target_package.create_package();
+        &self.build();
+        &self.to_app().write().unwrap();
+        &self.create_package();
     }
     // pub async fn pull_all(&self) {
     //     if let Some(sources) = &self.sources {
@@ -224,6 +225,7 @@ impl BuildFile {
             metadata: self.metadata.clone(),
             security: self.security.clone(),
             dependencies: self.dependencies.clone(),
+            files: self.gen_file_list(),
         }
     }
 

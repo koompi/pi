@@ -76,14 +76,9 @@ async fn main() -> std::io::Result<()> {
                     let ps: Vec<PathBuf> = pkgs.iter().map(|p| PathBuf::from(p)).collect();
                     println!("{:?}", ps)
                 } else {
-                    // help("build");
                     let target_package: BuildFile =
                         BuildFile::from_file(PKG_FILE.to_path_buf()).unwrap();
                     target_package.build_all().await;
-
-                    // target_package.build();
-                    // target_package.to_manifest().write().unwrap();
-                    // target_package.create_package();
                 }
             }
             "g" | "generate" | "-g" | "--generate" => {
