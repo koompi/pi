@@ -13,24 +13,36 @@ metadata:
     project_ownder:
         - Calamares
 sources:
-    # - GIT:
-    #       address: "git://github.com/calamares/calamares"
-    #       save_as: calamares
-    #
-    # - HTTP:
-    #       address: "https://github.com/calamares/calamares/releases/download/v3.2.39/calamares-3.2.39.tar.gz"
-    #       save_as: calamares-3.2.39.tar.gz
-    #       extract: true
-    #       extract_to: calamares
-    # - HTTP:
-    #       address: "https://dev.koompi.org/koompi/pix-v1.0.0-1-any.pkg.tar.zst"
-    #       save_as: pix-v1.0.0-1-any.pkg.tar.zst
-    #       extract: true
-    #       extract_to: pix
-    - address: https://dev.koompi.org/koompi/pix-v1.0.0-1-any.pkg.tar.zst
-      save_as: pix-v1.0.0-1-any.pkg.tar.zst
+    - address: git://github.com/calamares/calamares
+      save_as: calamares
       extract: false
       extract_to: ""
+
+    - address: https://archive.archlinux.org/packages/l/linux/linux-5.4.arch1-1-x86_64.pkg.tar.xz
+      save_as: linux-5.4.arch1-1-x86_64.pkg.tar.xz
+      extract: true
+      extract_to: linux
+
+    - address: "https://github.com/calamares/calamares/releases/download/v3.2.39/calamares-3.2.39.tar.gz"
+      save_as: calamares-3.2.39.tar.gz
+      extract: true
+      extract_to: calamares
+
+    - address: "http://sourceware.org/ftp/elfutils/0.178/elfutils-0.178.tar.bz2"
+      save_as: elfutils-0.178.tar.bz2
+      extract: true
+      extract_to: ""
+
+    - address: https://dev.koompi.org/koompi/pix-v1.0.0-1-any.pkg.tar.zst
+      save_as: pix-v1.0.0-1-any.pkg.tar.zst
+      extract: true
+      extract_to: pix
+
+    - address: https://github.com/balena-io/etcher/releases/download/v1.5.116/balena-etcher-electron-1.5.116-linux-x64.zip
+      save_as: balena-etcher-electron-1.5.116-linux-x64.zip
+      extract: true
+      extract_to: balena-etcher-electron
+
 security: ~
 dependencies: ~
 check: ~
