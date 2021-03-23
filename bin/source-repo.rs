@@ -1,4 +1,4 @@
-use package_manager::{BuildFile, SourceDatabase};
+use package_manager::{BuildFile, SourceRepo};
 use serde_yaml::{from_reader, to_writer};
 use std::time::SystemTime;
 use std::{
@@ -69,14 +69,14 @@ fn create(path: &str) -> Result<(), Error> {
     }
 
     let file = File::create(path)?;
-    let data = SourceDatabase::new();
+    let data = SourceRepo::new();
     match to_writer(file, &data) {
         Ok(_) => Ok(()),
         Err(e) => Err(Error::new(ErrorKind::Other, e.to_string())),
     }
 }
 
-fn update_db(path: &str, data: &SourceDatabase) -> Result<(), Error> {
+fn update_db(path: &str, data: &SourceRepo) -> Result<(), Error> {
     let p = Path::new(path);
     if let Some(p) = p.parent() {
         if !p.exists() {
@@ -92,7 +92,7 @@ fn update_db(path: &str, data: &SourceDatabase) -> Result<(), Error> {
     }
 }
 
-fn opendb(path: &str) -> Result<SourceDatabase, Error> {
+fn opendb(path: &str) -> Result<SourceRepo, Error> {
     let db_file = File::open(path)?;
     match from_reader(db_file) {
         Ok(db) => Ok(db),
@@ -101,7 +101,7 @@ fn opendb(path: &str) -> Result<SourceDatabase, Error> {
 }
 
 fn add(db_path: &str, pkg_files: Vec<PathBuf>) {
-    let mut db: SourceDatabase = opendb(db_path).unwrap();
+    let mut db: SourceRepo = opendb(db_path).unwrap();
 
     for pkg_file in pkg_files.iter() {
         let pkg_file_name = pkg_file.to_str().unwrap();
@@ -117,18 +117,9 @@ fn add(db_path: &str, pkg_files: Vec<PathBuf>) {
 
         copy(pkg_file_name, new_file_name).unwrap();
 
-        let res = db
-            .applications
-            .iter()
-            .find(|&m| m.metadata.name == data.metadata.name);
-
-        if let Some(_) = res {
-            &db.applications
-                .retain(|m| m.metadata.name != data.metadata.name);
-            &db.applications.push(data.clone());
-        } else {
-            &db.applications.push(data.clone());
-        }
+        db.applications
+            .entry(data.metadata.name.clone())
+            .or_insert(data);
     }
     let now = SystemTime::now();
     db.date = now;
@@ -136,20 +127,17 @@ fn add(db_path: &str, pkg_files: Vec<PathBuf>) {
 }
 
 fn remove(db_path: &str, pkg_files: Vec<PathBuf>) {
-    let mut db: SourceDatabase = opendb(db_path).unwrap();
+    let mut db: SourceRepo = opendb(db_path).unwrap();
 
     let db_file = PathBuf::from(db_path);
     let db_dir = db_file.parent().unwrap();
 
     if !pkg_files.is_empty() {
         for pkg in pkg_files.iter() {
-            &db.applications.retain(|m| {
-                if m.metadata.name == pkg.to_str().unwrap() {
-                    let file_name = format!("{}.yml", m.metadata.name);
-                    std::fs::remove_file(db_dir.join(file_name)).unwrap();
-                }
-                m.metadata.name != pkg.to_str().unwrap().to_string()
-            });
+            if let Some((_, app)) = db.applications.remove_entry(pkg.to_str().unwrap()) {
+                let file_name = format!("{}.yml", app.metadata.name);
+                std::fs::remove_file(db_dir.join(file_name)).unwrap();
+            }
         }
     }
     let now = SystemTime::now();

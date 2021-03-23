@@ -2,27 +2,41 @@ use super::Application;
 use serde::{Deserialize, Serialize};
 use serde_yaml;
 use solvent::DepGraph;
+use std::collections::HashMap;
 use std::fs::File;
 use std::time::SystemTime;
 
 #[derive(Clone, Debug, Deserialize, Serialize)]
 pub struct BinDatabase {
-    pub applications: Vec<Application>,
-    pub date: SystemTime,
+    pub repos: HashMap<String, BinRepo>,
 }
 
 impl BinDatabase {
+    pub fn new() -> Self {
+        Self {
+            repos: HashMap::new(),
+        }
+    }
+}
+
+#[derive(Clone, Debug, Deserialize, Serialize)]
+pub struct BinRepo {
+    pub applications: HashMap<String, Application>,
+    pub date: SystemTime,
+}
+
+impl BinRepo {
     // Create
     pub fn new() -> Self {
         Self {
-            applications: Vec::new(),
+            applications: HashMap::new(),
             date: SystemTime::now(),
         }
     }
 
     pub fn from(path: &str) -> Self {
         let file = File::open(path).unwrap();
-        let data: BinDatabase = serde_yaml::from_reader(file).unwrap();
+        let data: BinRepo = serde_yaml::from_reader(file).unwrap();
         data
     }
 
@@ -30,7 +44,7 @@ impl BinDatabase {
     pub fn get_run_dependencies(&self) -> DepGraph<String> {
         let mut depgraph: DepGraph<String> = DepGraph::new();
         if !self.applications.is_empty() {
-            for app in self.applications.iter() {
+            for (name, app) in self.applications.iter() {
                 let name = app.metadata.name.to_string();
                 if let Some(deps) = &app.dependencies {
                     if let Some(run_deps) = &deps.run_dependencies {
@@ -48,7 +62,7 @@ impl BinDatabase {
     pub fn get_opt_dependencies(&self) -> DepGraph<String> {
         let mut depgraph: DepGraph<String> = DepGraph::new();
         if !self.applications.is_empty() {
-            for app in self.applications.iter() {
+            for (name, app) in self.applications.iter() {
                 let name = app.metadata.name.to_string();
                 if let Some(deps) = &app.dependencies {
                     if let Some(run_deps) = &deps.opt_depencies {
@@ -66,7 +80,7 @@ impl BinDatabase {
     pub fn get_build_dependencies(&self) -> DepGraph<String> {
         let mut depgraph: DepGraph<String> = DepGraph::new();
         if !self.applications.is_empty() {
-            for app in self.applications.iter() {
+            for (name, app) in self.applications.iter() {
                 let name = app.metadata.name.to_string();
                 if let Some(deps) = &app.dependencies {
                     if let Some(run_deps) = &deps.build_dependencies {
@@ -84,7 +98,7 @@ impl BinDatabase {
     pub fn get_test_dependencies(&self) -> DepGraph<String> {
         let mut depgraph: DepGraph<String> = DepGraph::new();
         if !self.applications.is_empty() {
-            for app in self.applications.iter() {
+            for (name, app) in self.applications.iter() {
                 let name = app.metadata.name.to_string();
                 if let Some(deps) = &app.dependencies {
                     if let Some(run_deps) = &deps.test_dependencies {

@@ -10,7 +10,7 @@ lazy_static! {
 
     // Package Manager
     pub static ref ROOT_DIR: PathBuf = root();
-    pub static ref LIB_DIR: PathBuf = ROOT_DIR.join("var/lib/pi");
+    pub static ref LIB_DIR: PathBuf = ROOT_DIR.join("var/lib/store");
     pub static ref LOCAL_DIR: PathBuf = LIB_DIR.join("local");
     pub static ref SYNC_DIR: PathBuf = LIB_DIR.join("sync");
     pub static ref CONF_DIR: PathBuf = ROOT_DIR.join("etc/store");

@@ -20,8 +20,9 @@ mod statics;
 // Local
 pub use application::Application;
 pub use architecture::Architecture;
-pub use bin_database::BinDatabase;
+pub use bin_database::{BinDatabase, BinRepo};
 pub use build_file::BuildFile;
+use colored::Colorize;
 pub use config::{Configuration, RepoMeta};
 pub use dependency::Dependency;
 pub use deployment::Deployment;
@@ -59,11 +60,13 @@ async fn main() -> std::io::Result<()> {
         let mut file = File::create(CONF_FILE.as_path()).unwrap();
         serde_yaml::to_writer(&mut file, &Configuration::gen()).unwrap()
     }
-
+    let mut db: BinDatabase = BinDatabase::new();
     // read the config
     let rdr = File::open(CONF_FILE.as_path()).unwrap();
     let repo_config: Configuration = serde_yaml::from_reader(rdr).unwrap();
+    // let database
     // check if all repo listed in config file existed or download it
+    println!("{}", "Checking databases".green());
     for repo in repo_config.repos.iter() {
         let db_file_path = SYNC_DIR.join(format!("{}.db", &repo.name));
 
@@ -77,7 +80,13 @@ async fn main() -> std::io::Result<()> {
             .await
             .unwrap();
         }
+        let repo_file = File::open(db_file_path).unwrap();
+        let repo_data: BinRepo = serde_yaml::from_reader(repo_file).unwrap();
+
+        db.repos.insert(repo.name.clone(), repo_data);
     }
+
+    println!("{:#?}", db);
 
     let args: Vec<String> = env::args_os()
         .map(|a| a.to_str().unwrap().to_string())
