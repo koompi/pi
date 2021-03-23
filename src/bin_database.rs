@@ -17,6 +17,16 @@ impl BinDatabase {
             repos: HashMap::new(),
         }
     }
+
+    pub fn find(&self, app: &str) -> Option<Application> {
+        let mut res: Option<Application> = None;
+        for (repo_name, repo) in self.repos.iter() {
+            if let Some(application) = repo.applications.get(app) {
+                res = Some(application.clone())
+            }
+        }
+        res
+    }
 }
 
 #[derive(Clone, Debug, Deserialize, Serialize)]

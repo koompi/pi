@@ -176,11 +176,12 @@ async fn main() -> std::io::Result<()> {
                         }
                         _ => {
                             // install(pkgs, false).await;
-                            pkgs.iter().for_each(|pkg| {
-                                if let Some(app) = Application::is_installed(&pkg) {
-                                    println!("{:#?}", &app)
-                                }
-                            });
+                            // pkgs.iter().for_each(|pkg| {
+                            //     if let Some(app) = Application::is_installed(&pkg) {
+                            //         println!("{:#?}", &app)
+                            //     }
+                            // });
+                            println!("{:?}", db.find("calamares"));
                         }
                     }
                 } else {
@@ -194,6 +195,25 @@ async fn main() -> std::io::Result<()> {
                     println!("{:?}", ps)
                 } else {
                     help("remove");
+                }
+            }
+            "s" | "search" | "-s" | "--search" => {
+                if let Some(pkgs) = packages {
+                    if !pkgs.is_empty() {
+                        for p in pkgs.iter() {
+                            // println!("{:?}", db.find(p));
+                            let res = db.find(p);
+                            if let Some(app) = res {
+                                println!("{:#?}", app);
+                            } else {
+                                println!("{} is not found", p.red().bold());
+                            }
+                        }
+                    } else {
+                        help("search");
+                    }
+                } else {
+                    help("search");
                 }
             }
             "u" | "update" | "-u" | "--update" => {
