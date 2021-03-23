@@ -4,7 +4,7 @@ use serde::{Deserialize, Serialize};
 #[derive(Clone, Debug, Default, Deserialize, Serialize)]
 pub struct Dependency {
     pub build_dependencies: Option<Vec<String>>,
-    pub opt_depencies: Option<Vec<String>>,
+    pub opt_dependencies: Option<Vec<String>>,
     pub run_dependencies: Option<Vec<String>>,
     pub test_dependencies: Option<Vec<String>>,
 }
@@ -45,10 +45,10 @@ impl Dependency {
         }
     }
 
-    pub fn check_opt_depencies(&self) -> Result<(), Vec<String>> {
+    pub fn check_opt_dependencies(&self) -> Result<(), Vec<String>> {
         let mut missing_deps: Vec<String> = Vec::new();
 
-        match &self.opt_depencies {
+        match &self.opt_dependencies {
             Some(deps) => {
                 if !deps.is_empty() {
                     // is each dep installed or not?

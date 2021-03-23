@@ -1,4 +1,10 @@
-#![allow(unused_variables, unused_imports, dead_code)]
+#![allow(
+    unused_variables,
+    unused_imports,
+    dead_code,
+    unused_mut,
+    unused_assignments
+)]
 pub mod utils;
 
 mod application;
@@ -36,6 +42,7 @@ pub use statics::*;
 use utils::{download_http, prepare_bases};
 
 // External
+use solvent::DepGraph;
 use std::{env, fs::File, path::PathBuf};
 use tokio::{fs, io::AsyncWriteExt};
 
@@ -60,13 +67,19 @@ async fn main() -> std::io::Result<()> {
         let mut file = File::create(CONF_FILE.as_path()).unwrap();
         serde_yaml::to_writer(&mut file, &Configuration::gen()).unwrap()
     }
+    // dependencies graph
+    let mut run_depgraph: DepGraph<String> = DepGraph::new();
+    let mut opt_depgraph: DepGraph<String> = DepGraph::new();
+    let mut buid_depgraph: DepGraph<String> = DepGraph::new();
+    let mut test_depgraph: DepGraph<String> = DepGraph::new();
+    // local database
     let mut db: BinDatabase = BinDatabase::new();
     // read the config
     let rdr = File::open(CONF_FILE.as_path()).unwrap();
     let repo_config: Configuration = serde_yaml::from_reader(rdr).unwrap();
     // let database
     // check if all repo listed in config file existed or download it
-    println!("{}", "Checking databases".green());
+    println!("{}", "PREPARING DATABASE".green());
     for repo in repo_config.repos.iter() {
         let db_file_path = SYNC_DIR.join(format!("{}.db", &repo.name));
 
@@ -86,7 +99,44 @@ async fn main() -> std::io::Result<()> {
         db.repos.insert(repo.name.clone(), repo_data);
     }
 
-    println!("{:#?}", db);
+    for (_, repo) in db.repos.iter() {
+        for (_, app) in repo.applications.iter() {
+            if let Some(deps) = &app.dependencies {
+                // runtime dependencies
+                if let Some(rd) = &deps.run_dependencies {
+                    if rd.is_empty() {
+                        run_depgraph.register_node(app.metadata.name.clone());
+                    } else {
+                        run_depgraph.register_dependencies(app.metadata.name.clone(), rd.to_vec())
+                    }
+                }
+                // optional dependencies
+                if let Some(od) = &deps.opt_dependencies {
+                    if od.is_empty() {
+                        opt_depgraph.register_node(app.metadata.name.clone());
+                    } else {
+                        opt_depgraph.register_dependencies(app.metadata.name.clone(), od.to_vec())
+                    }
+                }
+                // build dependencies
+                if let Some(bd) = &deps.build_dependencies {
+                    if bd.is_empty() {
+                        buid_depgraph.register_node(app.metadata.name.clone());
+                    } else {
+                        buid_depgraph.register_dependencies(app.metadata.name.clone(), bd.to_vec())
+                    }
+                }
+                // test dependencies
+                if let Some(td) = &deps.test_dependencies {
+                    if td.is_empty() {
+                        test_depgraph.register_node(app.metadata.name.clone());
+                    } else {
+                        test_depgraph.register_dependencies(app.metadata.name.clone(), td.to_vec())
+                    }
+                }
+            }
+        }
+    }
 
     let args: Vec<String> = env::args_os()
         .map(|a| a.to_str().unwrap().to_string())

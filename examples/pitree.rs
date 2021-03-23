@@ -22,8 +22,6 @@ fn main() {
 
     for app in data.apps.iter() {
         if let Some(data) = &app.deps {
-            // let cdeps: Vec<Str> = data.iter().map(|d| d.as_str().clone()).collect();
-
             depgraph.register_dependencies(app.name.clone(), data.to_vec());
         }
     }
@@ -32,8 +30,8 @@ fn main() {
         deps.push(node.unwrap().to_string())
     }
 
-    deps.sort();
+    // deps.sort();
 
     // println!("{:#?}", deps);
-    println!("{:#?}", depgraph)
+    // println!("{:#?}", depgraph)
 }

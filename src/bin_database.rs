@@ -65,7 +65,7 @@ impl BinRepo {
             for (name, app) in self.applications.iter() {
                 let name = app.metadata.name.to_string();
                 if let Some(deps) = &app.dependencies {
-                    if let Some(run_deps) = &deps.opt_depencies {
+                    if let Some(run_deps) = &deps.opt_dependencies {
                         let rdeps = run_deps;
                         depgraph.register_dependencies(name, rdeps.to_vec())
                     }
