@@ -2,6 +2,7 @@ use super::Application;
 use crate::utils::{decompress_all, decompress_zstd, download_http, extract_archive};
 use crate::{Configuration, CACHE_DIR, ROOT_DIR, SUFFIX_APP};
 use colored::Colorize;
+use indicatif::ProgressBar;
 use serde::{Deserialize, Serialize};
 use serde_yaml;
 use solvent::DepGraph;
@@ -127,6 +128,7 @@ impl BinDatabase {
                 } else {
                     // Download packages
                     println!("{}", "DOWNLOADING PACKAGES".green());
+
                     for target in to_install.iter() {
                         let file_path =
                             CACHE_DIR.to_path_buf().join(&target.package.archive_name());
@@ -139,6 +141,7 @@ impl BinDatabase {
                         .unwrap();
                     }
                     println!("{}", "INSTALLING PACKAGES".green());
+                    let pb = ProgressBar::new(to_install.len() as u64);
                     for target in to_install.iter() {
                         let file_path =
                             CACHE_DIR.to_path_buf().join(&target.package.archive_name());
@@ -150,7 +153,10 @@ impl BinDatabase {
                             ROOT_DIR.to_str().unwrap(),
                         )
                         .unwrap();
+
+                        pb.inc(1);
                     }
+                    pb.finish();
                 }
                 // Note
 
