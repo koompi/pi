@@ -29,6 +29,14 @@ impl Configuration {
         let data = from_reader(file).unwrap();
         data
     }
+
+    pub fn get_address(&self, name: &str) -> Option<String> {
+        if let Some(repo) = &self.repos.iter().find(|repo| repo.name == name) {
+            return Some(repo.address.clone());
+        } else {
+            return None;
+        }
+    }
 }
 
 #[derive(Debug, Clone, Deserialize, Serialize)]

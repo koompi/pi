@@ -28,20 +28,22 @@ pub use application::Application;
 pub use architecture::Architecture;
 pub use bin_database::{BinDatabase, BinRepo};
 pub use build_file::BuildFile;
-use colored::Colorize;
 pub use config::{Configuration, RepoMeta};
 pub use dependency::Dependency;
 pub use deployment::Deployment;
 pub use function::Function;
-use help::help;
+pub use help::help;
 pub use license::License;
 pub use metadata::Metadata;
+// use operations::{install_file, install_many};
 pub use security::Security;
 pub use source::Source;
+pub use source_database::SourceDatabase;
 pub use statics::*;
-use utils::{download_http, prepare_bases};
+pub use utils::{download_http, prepare_bases};
 
 // External
+use colored::Colorize;
 use solvent::DepGraph;
 use std::{env, fs::File, path::PathBuf};
 use tokio::{fs, io::AsyncWriteExt};
@@ -59,6 +61,7 @@ async fn main() -> std::io::Result<()> {
         LIB_DIR.to_path_buf(),
         LOCAL_DIR.to_path_buf(),
         SYNC_DIR.to_path_buf(),
+        CACHE_DIR.to_path_buf(),
         CONF_DIR.to_path_buf(),
     ])
     .unwrap();
@@ -158,7 +161,7 @@ async fn main() -> std::io::Result<()> {
                 } else {
                     let target_package: BuildFile =
                         BuildFile::from_file(PKG_FILE.to_path_buf()).unwrap();
-                    target_package.build_all().await;
+                    target_package.build_all(&repo_config, &db).await;
                 }
             }
             "g" | "generate" | "-g" | "--generate" => {
@@ -171,17 +174,15 @@ async fn main() -> std::io::Result<()> {
                     let local: String = pkgs[0].clone();
                     match local.as_ref() {
                         "-f" | "--file" => {
-                            let files: Vec<String> = pkgs[1..].to_vec();
-                            // install(files, true).await;
+                            let files: Vec<PathBuf> =
+                                pkgs.iter().skip(1).map(|p| PathBuf::from(p)).collect();
+                            // install_file(&db, files).await.unwrap();
                         }
                         _ => {
-                            // install(pkgs, false).await;
-                            // pkgs.iter().for_each(|pkg| {
-                            //     if let Some(app) = Application::is_installed(&pkg) {
-                            //         println!("{:#?}", &app)
-                            //     }
-                            // });
-                            println!("{:?}", db.find("calamares"));
+                            // install_many(&db, pkgs).await.unwrap();
+                            db.install(&run_depgraph, &repo_config, pkgs.to_vec())
+                                .await
+                                .unwrap();
                         }
                     }
                 } else {
@@ -202,7 +203,7 @@ async fn main() -> std::io::Result<()> {
                     if !pkgs.is_empty() {
                         for p in pkgs.iter() {
                             // println!("{:?}", db.find(p));
-                            let res = db.find(p);
+                            let res = db.find(&repo_config, p);
                             if let Some(app) = res {
                                 println!("{:#?}", app);
                             } else {

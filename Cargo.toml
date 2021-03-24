@@ -14,9 +14,9 @@ edition = "2018"
 #name = "converter"
 #path = "bin/converter.rs"
 
-#[[bin]]
-#name = "pitree"
-#path = "bin/pitree.rs"
+[[bin]]
+name = "pitree"
+path = "examples/pitree.rs"
 
 # [[bin]]
 # name = "down"

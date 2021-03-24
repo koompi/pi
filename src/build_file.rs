@@ -1,9 +1,10 @@
-use crate::source;
+use crate::{source, Configuration};
 
-use super::{
+use crate::{
     statics::{MANI_FILE, PKG_DIR, PKG_FILE, SRC_DIR},
     utils::{create_archive, decompress_all, download_git, download_http, read_to_vec_u8},
-    Application, Dependency, Deployment, Function, Metadata, Security, Source,
+    Application, BinDatabase, Dependency, Deployment, Function, Metadata, Security, Source,
+    SourceDatabase,
 };
 use colored::Colorize;
 use serde::{Deserialize, Serialize};
@@ -71,12 +72,52 @@ impl BuildFile {
         *self = data;
     }
 
-    pub fn check_makedepends(&self) {
+    pub fn check_build_dependencies(&self, config: &Configuration, bdb: &BinDatabase) {
+        let mut not_installed_deps: Vec<String> = Vec::new();
+        let mut to_install_deps: Vec<String> = Vec::new();
+        let mut missing_deps: Vec<String> = Vec::new();
+
         if let Some(deps) = &self.dependencies {
             if let Some(build_deps) = &deps.build_dependencies {
                 if !build_deps.is_empty() {
-                    // Check is make deps installed
-                    println!("{:?}", build_deps);
+                    // 1. Check is make deps installed
+                    for bd in build_deps.iter() {
+                        if let None = Application::is_installed(bd) {
+                            not_installed_deps.push(bd.to_string())
+                        }
+                    }
+
+                    if !not_installed_deps.is_empty() {
+                        for bdep in not_installed_deps.iter() {
+                            match bdb.find(config, bdep) {
+                                Some(a) => to_install_deps.push(bdep.clone()),
+                                None => missing_deps.push(bdep.clone()),
+                            }
+                        }
+                    }
+
+                    if missing_deps.is_empty() {
+                        if !to_install_deps.is_empty() {
+                            for app in to_install_deps.iter() {
+                                // install the dep there
+                            }
+                        }
+                    } else {
+                        println!(
+                            "Unable to find {singplu}: {list}",
+                            singplu = if missing_deps.len() > 1 {
+                                "dependencies"
+                            } else {
+                                "dependency"
+                            },
+                            list = missing_deps.join(", ")
+                        );
+
+                        std::process::exit(1);
+                    }
+                    // 2. Check if exists in db => Install
+                    // 3.
+                    // println!("{:?}", build_deps);
                 }
             }
         }
@@ -145,8 +186,8 @@ impl BuildFile {
         Ok(())
     }
 
-    pub async fn build_all(&self) {
-        &self.check_makedepends();
+    pub async fn build_all(&self, config: &Configuration, bdb: &BinDatabase) {
+        &self.check_build_dependencies(&config, &bdb);
         &self.pull_all().await;
         &self.build();
         &self.to_app().write().unwrap();

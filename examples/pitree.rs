@@ -23,15 +23,20 @@ fn main() {
     for app in data.apps.iter() {
         if let Some(data) = &app.deps {
             depgraph.register_dependencies(app.name.clone(), data.to_vec());
+        } else {
+            depgraph.register_node(app.name.clone())
         }
     }
     let mut deps: Vec<String> = Vec::new();
-    for node in depgraph.dependencies_of(&String::from("systemd")).unwrap() {
+    for node in depgraph
+        .dependencies_of(&String::from("linux-lts-headers"))
+        .unwrap()
+    {
         deps.push(node.unwrap().to_string())
     }
 
     // deps.sort();
 
-    // println!("{:#?}", deps);
+    println!("{:#?}", deps);
     // println!("{:#?}", depgraph)
 }

@@ -1,6 +1,7 @@
-pub fn install(apps: &Vec<String>) {
-    let valid_packages: Vec<String> = Vec::new();
-    let invalid_packages: Vec<String> = Vec::new();
+use crate::BinDatabase;
+use colored::Colorize;
+use std::path::PathBuf;
 
-    for app in apps.iter() {}
-}
+// pub async fn install_many(bdb: &BinDatabase, apps: Vec<String>) -> Result<()> {}
+
+// pub async fn install_file(bdb: &BinDatabase, files: Vec<PathBuf>) -> Result<()> {}

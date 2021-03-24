@@ -25,6 +25,7 @@ pub mod utils;
 
 pub use application::Application;
 pub use architecture::Architecture;
+pub use bin_database::BinDatabase;
 pub use bin_database::BinRepo;
 pub use build_file::BuildFile;
 pub use config::Configuration;
@@ -36,5 +37,6 @@ pub use license::License;
 pub use metadata::Metadata;
 pub use security::Security;
 pub use source::Source;
+pub use source_database::SourceDatabase;
 pub use source_database::SourceRepo;
 pub use statics::*;

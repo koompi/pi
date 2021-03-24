@@ -13,6 +13,7 @@ lazy_static! {
     pub static ref LIB_DIR: PathBuf = ROOT_DIR.join("var/lib/store");
     pub static ref LOCAL_DIR: PathBuf = LIB_DIR.join("local");
     pub static ref SYNC_DIR: PathBuf = LIB_DIR.join("sync");
+    pub static ref CACHE_DIR: PathBuf = LIB_DIR.join("cache");
     pub static ref CONF_DIR: PathBuf = ROOT_DIR.join("etc/store");
 
     pub static ref CONF_FILE: PathBuf = CONF_DIR.join("store.conf");

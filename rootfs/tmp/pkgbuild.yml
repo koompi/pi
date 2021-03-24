@@ -44,7 +44,10 @@ sources:
     #   extract_to: balena-etcher-electron
 
 security: ~
-dependencies: ~
+dependencies:
+    build_dependencies:
+        - cmake
+        - kf5
 check: ~
 prepare:
     commands:
