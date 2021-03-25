@@ -183,11 +183,11 @@ async fn main() -> std::io::Result<()> {
                         "-f" | "--file" => {
                             let files: Vec<PathBuf> =
                                 pkgs.iter().skip(1).map(|p| PathBuf::from(p)).collect();
-                            // install_file(&db, files).await.unwrap();
+                            db.install_files(&run_depgraph, &repo_config, files.to_vec())
+                                .await
+                                .unwrap();
                         }
                         _ => {
-                            // install_many(&db, pkgs).await.unwrap();
-                            println!("{:?}", &pkgs);
                             db.install(&run_depgraph, &repo_config, pkgs.to_vec())
                                 .await
                                 .unwrap();

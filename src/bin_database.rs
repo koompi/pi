@@ -6,9 +6,9 @@ use indicatif::ProgressBar;
 use serde::{Deserialize, Serialize};
 use serde_yaml;
 use solvent::DepGraph;
-use std::collections::HashMap;
-use std::fs::File;
 use std::time::SystemTime;
+use std::{collections::HashMap, path::PathBuf};
+use std::{fs::File, io::Read};
 use url::Url;
 
 #[derive(Clone, Debug, Deserialize, Serialize)]
@@ -145,15 +145,74 @@ impl BinDatabase {
                         )
                         .unwrap();
 
-                        pb.inc(1);
                         std::fs::remove_file(&target_str).unwrap();
                         std::fs::remove_file(&target_str.trim_end_matches(&SUFFIX_APP.to_string()))
                             .unwrap();
+                        pb.inc(1);
                     }
                     pb.finish();
                 }
             }
         }
+
+        Ok(())
+    }
+
+    pub async fn install_files(
+        &self,
+        rd: &DepGraph<String>,
+        repo_config: &Configuration,
+        packages: Vec<PathBuf>,
+    ) -> std::io::Result<()> {
+        let mut tar_files: Vec<String> = Vec::new();
+
+        for package in packages.iter() {
+            decompress_zstd(&package.to_str().unwrap()).unwrap();
+            tar_files.push(
+                package
+                    .to_str()
+                    .unwrap()
+                    .to_string()
+                    .trim_end_matches(".app")
+                    .to_string(),
+            );
+        }
+        let mut valid_packages: Vec<String> = Vec::new();
+        for tar_file in tar_files.iter() {
+            let file = File::open(tar_file).unwrap();
+            let mut archive = tar::Archive::new(file);
+
+            match archive.entries() {
+                Ok(mut entries) => {
+                    let res = entries.find(|f| {
+                        f.as_ref().unwrap().path().unwrap().to_str().unwrap() == "manifest.yml"
+                    });
+                    let mut buf = String::new();
+                    res.unwrap().unwrap().read_to_string(&mut buf).unwrap();
+
+                    let data: Result<Application, serde_yaml::Error> = serde_yaml::from_str(&buf);
+                    match data {
+                        Ok(_) => valid_packages.push(tar_file.clone()),
+                        Err(e) => {
+                            println!("{}", e.to_string());
+                            std::process::exit(1);
+                        }
+                    }
+                }
+                Err(e) => {
+                    println!("{}", e.to_string());
+                    std::process::exit(1);
+                }
+            }
+        }
+        println!("{}", "INSTALLING PACKAGES".green());
+        let pb = ProgressBar::new(valid_packages.len() as u64);
+
+        for package in valid_packages.iter() {
+            extract_archive(&package, ROOT_DIR.to_str().unwrap()).unwrap();
+            pb.inc(1);
+        }
+        pb.finish();
 
         Ok(())
     }
