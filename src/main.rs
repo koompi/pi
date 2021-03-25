@@ -137,6 +137,11 @@ async fn main() -> std::io::Result<()> {
                         test_depgraph.register_dependencies(app.metadata.name.clone(), td.to_vec())
                     }
                 }
+            } else {
+                run_depgraph.register_node(app.metadata.name.clone());
+                opt_depgraph.register_node(app.metadata.name.clone());
+                buid_depgraph.register_node(app.metadata.name.clone());
+                test_depgraph.register_node(app.metadata.name.clone());
             }
         }
     }
@@ -161,7 +166,9 @@ async fn main() -> std::io::Result<()> {
                 } else {
                     let target_package: BuildFile =
                         BuildFile::from_file(PKG_FILE.to_path_buf()).unwrap();
-                    target_package.build_all(&repo_config, &db).await;
+                    target_package
+                        .build_all(&run_depgraph, &repo_config, &db)
+                        .await;
                 }
             }
             "g" | "generate" | "-g" | "--generate" => {
@@ -180,6 +187,7 @@ async fn main() -> std::io::Result<()> {
                         }
                         _ => {
                             // install_many(&db, pkgs).await.unwrap();
+                            println!("{:?}", &pkgs);
                             db.install(&run_depgraph, &repo_config, pkgs.to_vec())
                                 .await
                                 .unwrap();
@@ -191,9 +199,27 @@ async fn main() -> std::io::Result<()> {
             }
             "r" | "remove" | "-r" | "--remove" => {
                 if let Some(pkgs) = packages {
-                    let ps: Vec<PathBuf> = pkgs.iter().map(|p| PathBuf::from(p)).collect();
+                    if !pkgs.is_empty() {
+                        for pkg in pkgs.iter() {
+                            if let Some(app) = Application::is_installed(&pkg) {
+                                let app_dir: PathBuf = LOCAL_DIR.to_owned().join(&pkg);
+                                let files = app.files.clone();
+                                files.iter().for_each(|file| {
+                                    let f: Vec<String> = file
+                                        .split(" ")
+                                        .into_iter()
+                                        .map(|a| a.to_string())
+                                        .collect();
+                                    let fi = f[0].clone();
+                                    std::fs::remove_file(ROOT_DIR.join(&fi)).unwrap()
+                                });
 
-                    println!("{:?}", ps)
+                                std::fs::remove_dir_all(app_dir).unwrap();
+                            }
+                        }
+                    } else {
+                        help("remove");
+                    }
                 } else {
                     help("remove");
                 }

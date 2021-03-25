@@ -78,13 +78,11 @@ pub fn decompress_all(source: &str, dest: &str) -> Result<()> {
 
 pub fn decompress_zstd(source: &str) -> Result<()> {
     let mut decoder = {
-        let file = File::open(source)?;
+        let file = File::open(&source)?;
         Decoder::new(file)?
     };
-
-    let mut target = File::create(source.trim_end_matches(SUFFIX_APP.as_str()))?;
-
+    let tar_path = source.to_string().trim_end_matches(".app").to_string();
+    let mut target = File::create(&tar_path)?;
     copy(&mut decoder, &mut target)?;
-
     Ok(())
 }

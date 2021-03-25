@@ -9,6 +9,7 @@ use crate::{
 use colored::Colorize;
 use serde::{Deserialize, Serialize};
 use sha2::{Digest, Sha256};
+use solvent::DepGraph;
 use std::{
     fs::File,
     io::{Error, ErrorKind},
@@ -72,7 +73,12 @@ impl BuildFile {
         *self = data;
     }
 
-    pub fn check_build_dependencies(&self, config: &Configuration, bdb: &BinDatabase) {
+    pub async fn check_build_dependencies(
+        &self,
+        rd: &DepGraph<String>,
+        config: &Configuration,
+        bdb: &BinDatabase,
+    ) {
         let mut not_installed_deps: Vec<String> = Vec::new();
         let mut to_install_deps: Vec<String> = Vec::new();
         let mut missing_deps: Vec<String> = Vec::new();
@@ -98,9 +104,10 @@ impl BuildFile {
 
                     if missing_deps.is_empty() {
                         if !to_install_deps.is_empty() {
-                            for app in to_install_deps.iter() {
-                                // install the dep there
-                            }
+                            // for app in to_install_deps.iter() {
+                            //     // install the dep there
+                            // }
+                            bdb.install(&rd, config, to_install_deps).await.unwrap();
                         }
                     } else {
                         println!(
@@ -186,8 +193,13 @@ impl BuildFile {
         Ok(())
     }
 
-    pub async fn build_all(&self, config: &Configuration, bdb: &BinDatabase) {
-        &self.check_build_dependencies(&config, &bdb);
+    pub async fn build_all(
+        &self,
+        rd: &DepGraph<String>,
+        config: &Configuration,
+        bdb: &BinDatabase,
+    ) {
+        &self.check_build_dependencies(&rd, &config, &bdb).await;
         &self.pull_all().await;
         &self.build();
         &self.to_app().write().unwrap();

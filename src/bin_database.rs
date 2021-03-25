@@ -34,13 +34,15 @@ impl BinDatabase {
         for (repo_name, repo) in self.repos.iter() {
             if let Some(repo_address) = config.get_address(&repo_name) {
                 if let Some(application) = repo.applications.get(app) {
-                    let package_name = &application.archive_name();
+                    let package_name = format!("{}.app", &application.archive_name());
                     let package_address: Url = Url::parse(&repo_address).unwrap();
-                    let full_address = package_address.join(package_name).unwrap();
+                    let full_address = package_address.join(&package_name).unwrap();
+
+                    println!("{:#?}", package_address.as_str());
 
                     res = Some(TargetPackage {
                         repo: repo_name.clone(),
-                        package_address: full_address.to_string(),
+                        package_address: format!("{}", full_address.to_string()),
                         package: application.clone(),
                     })
                 }
@@ -51,19 +53,6 @@ impl BinDatabase {
         }
         res
     }
-
-    // pub fn install_one(&self, app: &str) {
-    //     match self.find(app) {
-    //         Some(a) => {
-    //             // decompress_zstd(arg_file).unwrap();
-    //             // extract_archive(arg_file, &dest.to_str().unwrap()).unwrap();
-    //             // list_installed();
-    //         }
-    //         None => {
-    //             println!("Application not found: {}", app.red())
-    //         }
-    //     }
-    // }
 
     pub async fn install(
         &self,
@@ -103,7 +92,7 @@ impl BinDatabase {
                     }
                 }
             }
-
+            println!("{:?}", to_install_name);
             if !to_install_name.is_empty() {
                 to_install_name.dedup();
 
@@ -130,8 +119,9 @@ impl BinDatabase {
                     println!("{}", "DOWNLOADING PACKAGES".green());
 
                     for target in to_install.iter() {
-                        let file_path =
-                            CACHE_DIR.to_path_buf().join(&target.package.archive_name());
+                        let file_path = CACHE_DIR
+                            .to_path_buf()
+                            .join(format!("{}.app", &target.package.archive_name()));
                         download_http(
                             file_path.to_str().unwrap(),
                             &target.package.metadata.name,
@@ -143,9 +133,10 @@ impl BinDatabase {
                     println!("{}", "INSTALLING PACKAGES".green());
                     let pb = ProgressBar::new(to_install.len() as u64);
                     for target in to_install.iter() {
-                        let file_path =
-                            CACHE_DIR.to_path_buf().join(&target.package.archive_name());
-                        let target_str = file_path.to_str().unwrap().to_string();
+                        let file_path = CACHE_DIR
+                            .to_path_buf()
+                            .join(format!("{}.app", &target.package.archive_name()));
+                        let mut target_str = file_path.to_str().unwrap().to_string();
 
                         decompress_zstd(&target_str).unwrap();
                         extract_archive(
@@ -155,16 +146,12 @@ impl BinDatabase {
                         .unwrap();
 
                         pb.inc(1);
+                        std::fs::remove_file(&target_str).unwrap();
+                        std::fs::remove_file(&target_str.trim_end_matches(&SUFFIX_APP.to_string()))
+                            .unwrap();
                     }
                     pb.finish();
                 }
-                // Note
-
-                // Completed getting package url
-
-                // 1. load package info
-                // 2. download
-                // 3. extract
             }
         }
 
