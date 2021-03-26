@@ -1,5 +1,5 @@
 [package]
-name = "package-manager"
+name = "pi"
 version = "0.1.0"
 authors = ["mrrbrilliant <mrrbrilliantwork@gmail.com>"]
 edition = "2018"
@@ -25,15 +25,15 @@ path = "examples/pitree.rs"
 
 [[bin]]
 name = "bin-repo"
-path = "bin/bin-repo.rs"
+path = "src/bin/bin-repo.rs"
 
 [[bin]]
 name = "source-repo"
-path = "bin/source-repo.rs"
+path = "src/bin/source-repo.rs"
 
 [[bin]]
 name = "server"
-path = "bin/server.rs"
+path = "src/bin/server.rs"
 
 [dependencies]
 actix-files = "*"

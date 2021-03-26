@@ -16,7 +16,6 @@ pub mod function;
 pub mod help;
 pub mod license;
 pub mod metadata;
-pub mod operations;
 pub mod security;
 pub mod source;
 pub mod source_database;
