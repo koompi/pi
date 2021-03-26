@@ -15,6 +15,7 @@ use url::Url;
 pub struct BinDatabase {
     pub repos: HashMap<String, BinRepo>,
 }
+
 #[derive(Clone, Debug, Deserialize, Serialize)]
 pub struct TargetPackage {
     pub repo: String,
