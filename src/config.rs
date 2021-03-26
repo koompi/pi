@@ -30,9 +30,16 @@ impl Configuration {
         data
     }
 
-    pub fn get_address(&self, name: &str) -> Option<String> {
+    pub fn get_static_address(&self, name: &str) -> Option<String> {
         if let Some(repo) = &self.repos.iter().find(|repo| repo.name == name) {
-            return Some(repo.address.clone());
+            return Some(repo.static_address.clone());
+        } else {
+            return None;
+        }
+    }
+    pub fn get_update_address(&self, name: &str) -> Option<String> {
+        if let Some(repo) = &self.repos.iter().find(|repo| repo.name == name) {
+            return Some(repo.update_address.clone());
         } else {
             return None;
         }
@@ -42,19 +49,26 @@ impl Configuration {
 #[derive(Debug, Clone, Deserialize, Serialize)]
 pub struct RepoMeta {
     pub name: String,
-    pub address: String,
+    pub static_address: String,
+    pub update_address: String,
 }
 
 impl Default for RepoMeta {
     fn default() -> Self {
-        let address = if cfg!(debug_assertions) {
-            String::from("http://localhost:3690/core")
+        let static_address = if cfg!(debug_assertions) {
+            format!("http://localhost:3690/core/")
         } else {
-            String::from("http://dev.koompi.org/core")
+            format!("http://dev.koompi.org/core/")
+        };
+        let update_address = if cfg!(debug_assertions) {
+            format!("http://localhost:3690/version/core")
+        } else {
+            format!("http://dev.koompi.org/version/core")
         };
         Self {
             name: String::from("core"),
-            address,
+            static_address,
+            update_address,
         }
     }
 }

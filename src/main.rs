@@ -86,7 +86,7 @@ async fn main() -> std::io::Result<()> {
     for repo in repo_config.repos.iter() {
         let db_file_path = SYNC_DIR.join(format!("{}.db", &repo.name));
 
-        let address = format!("{}/{}.db", &repo.address, &repo.name);
+        let address = format!("{}/{}.db", &repo.static_address, &repo.name);
         if !db_file_path.exists() {
             download_http(
                 db_file_path.to_str().unwrap(),
@@ -228,7 +228,6 @@ async fn main() -> std::io::Result<()> {
                 if let Some(pkgs) = packages {
                     if !pkgs.is_empty() {
                         for p in pkgs.iter() {
-                            // println!("{:?}", db.find(p));
                             let res = db.find(&repo_config, p);
                             if let Some(app) = res {
                                 println!("{:#?}", app);
@@ -243,14 +242,7 @@ async fn main() -> std::io::Result<()> {
                     help("search");
                 }
             }
-            "u" | "update" | "-u" | "--update" => {
-                if let Some(pkgs) = packages {
-                    let ps: Vec<PathBuf> = pkgs.iter().map(|p| PathBuf::from(p)).collect();
-                    println!("{:?}", ps)
-                } else {
-                    help("update");
-                }
-            }
+            "u" | "update" | "-u" | "--update" => db.update(&run_depgraph, &repo_config).await,
             _ => help("all"),
         }
     } else {

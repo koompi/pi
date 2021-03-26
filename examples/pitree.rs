@@ -28,10 +28,7 @@ fn main() {
         }
     }
     let mut deps: Vec<String> = Vec::new();
-    for node in depgraph
-        .dependencies_of(&String::from("base-devel"))
-        .unwrap()
-    {
+    for node in depgraph.dependencies_of(&String::from("base")).unwrap() {
         deps.push(node.unwrap().to_string())
     }
 

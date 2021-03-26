@@ -14,13 +14,14 @@ edition = "2018"
 #name = "converter"
 #path = "bin/converter.rs"
 
-[[bin]]
-name = "pitree"
-path = "examples/pitree.rs"
-
 # [[bin]]
 # name = "down"
 # path = "bin/down.rs"
+
+[[example]]
+name = "pitree"
+path = "examples/pitree.rs"
+
 
 [[bin]]
 name = "bin-repo"
@@ -47,6 +48,7 @@ git2 = "*"
 indicatif = "*"
 lazy_static = "*"
 reqwest = "0.11.2"
+semver = "*"
 serde = {version = "*", features = ["derive"]}
 serde_yaml = "*"
 sha2 = "*"
@@ -54,7 +56,6 @@ shellfn = "*"
 solvent = "*"
 tar = "*"
 text-diff = "*"
-# tokio = {version = "1.4", features = ["full"]}
 tokio = { version = "1.3.0", features = ["macros", "fs", "io-util", "rt-multi-thread"] }
 url =  "*"
 walkdir = "*"
