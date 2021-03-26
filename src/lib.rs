@@ -31,7 +31,7 @@ pub use config::Configuration;
 pub use dependency::Dependency;
 pub use deployment::Deployment;
 pub use function::Function;
-use help::help;
+pub use help::help;
 pub use license::License;
 pub use metadata::Metadata;
 pub use security::Security;
