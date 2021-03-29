@@ -1,3 +1,4 @@
+use actix_web::dev::Path;
 use lazy_static::*;
 use std::sync::Mutex;
 use std::{env, io::Error, path::PathBuf};
@@ -25,6 +26,11 @@ lazy_static! {
     pub static ref PKG_DIR: PathBuf = cwd().join("package");
 
     pub static ref PKG_FILE: PathBuf = cwd().join("pkgbuild.yml");
+
+    // Server
+    pub static ref PUB_DIR: PathBuf = ROOT_DIR.join("var/www/");
+    pub static ref SERVER_CFG_DIR: PathBuf = ROOT_DIR.join("etc/repo");
+    pub static ref SERVER_CFG_FILE: PathBuf = SERVER_CFG_DIR.join("repo.conf");
 
 }
 
