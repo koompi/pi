@@ -163,7 +163,11 @@ impl BuildFile {
                     let parsed_url = Url::parse(&source.address).expect("Unable to parse URL");
                     let save_as = SRC_DIR.join(&source.save_as);
                     let extract = source.extract;
-                    let extract_to = SRC_DIR.join(source.extract_to.as_ref().unwrap());
+                    let extract_to: Option<PathBuf> = if extract {
+                        Some(SRC_DIR.join(source.extract_to.as_ref().unwrap()))
+                    } else {
+                        None
+                    };
 
                     match parsed_url.scheme() {
                         "git" => {
@@ -183,8 +187,10 @@ impl BuildFile {
                     }
 
                     if extract {
-                        decompress_all(&save_as.to_str().unwrap(), extract_to.to_str().unwrap())
-                            .unwrap();
+                        if let Some(ext) = extract_to {
+                            decompress_all(&save_as.to_str().unwrap(), ext.to_str().unwrap())
+                                .unwrap();
+                        }
                     }
                 }
             }
