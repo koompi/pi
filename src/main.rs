@@ -45,7 +45,7 @@ use colored::Colorize;
 use solvent::DepGraph;
 use std::{env, fs::File, path::PathBuf};
 use tokio::{fs, io::AsyncWriteExt};
-
+use url::Url;
 #[tokio::main]
 async fn main() -> std::io::Result<()> {
     // prepare directories
@@ -83,8 +83,10 @@ async fn main() -> std::io::Result<()> {
     println!("{}", "PREPARING DATABASE".green());
     for repo in repo_config.repos.iter() {
         let db_file_path = SYNC_DIR.join(format!("{}.db", &repo.name));
+        let static_url = Url::parse(&repo.static_address).unwrap();
+        let db_addres = static_url.join(&repo.name).unwrap();
 
-        let address = format!("{}/{}.db", &repo.static_address, &repo.name);
+        let address = format!("{}.db", &db_addres.to_string());
         if !db_file_path.exists() {
             download_http(
                 db_file_path.to_str().unwrap(),
