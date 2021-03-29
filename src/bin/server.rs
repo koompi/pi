@@ -7,7 +7,7 @@ use pi::{
 };
 use serde::{Deserialize, Serialize};
 use serde_yaml::from_reader;
-use std::{fs::File, path::PathBuf, time::SystemTime};
+use std::{env, fs::File, path::PathBuf, time::SystemTime};
 
 #[derive(Debug, Clone, Deserialize, Serialize)]
 struct ServerConfig {
@@ -24,23 +24,31 @@ impl ServerConfig {
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
-    prepare_bases(vec![SERVER_CFG_DIR.to_path_buf(), PUB_DIR.to_path_buf()]).unwrap();
+    let args: Vec<String> = env::args_os()
+        .skip(1)
+        .map(|a| a.to_str().unwrap().to_string())
+        .collect();
 
-    if !SERVER_CFG_FILE.as_path().exists() {
-        let mut file = File::create(SERVER_CFG_FILE.as_path()).unwrap();
-        serde_yaml::to_writer(&mut file, &ServerConfig::new()).unwrap()
+    if !args.is_empty() {
+        prepare_bases(vec![SERVER_CFG_DIR.to_path_buf(), PUB_DIR.to_path_buf()]).unwrap();
+
+        if !SERVER_CFG_FILE.as_path().exists() {
+            let mut file = File::create(SERVER_CFG_FILE.as_path()).unwrap();
+            serde_yaml::to_writer(&mut file, &ServerConfig::new()).unwrap();
+        }
+        Ok(())
+    } else {
+        HttpServer::new(|| {
+            let cfg = cfg_data();
+
+            App::new()
+                .service(web::resource("/version/{name}").route(web::get().to(with_param)))
+                .service(fs::Files::new("/", &cfg.repo_root).show_files_listing())
+        })
+        .bind("127.0.0.1:3690")?
+        .run()
+        .await
     }
-
-    HttpServer::new(|| {
-        let cfg = cfg_data();
-
-        App::new()
-            .service(web::resource("/version/{name}").route(web::get().to(with_param)))
-            .service(fs::Files::new("/", &cfg.repo_root).show_files_listing())
-    })
-    .bind("127.0.0.1:3690")?
-    .run()
-    .await
 }
 
 fn cfg_data() -> ServerConfig {
