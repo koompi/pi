@@ -43,7 +43,11 @@ pub use utils::{download_http, prepare_bases};
 // External
 use colored::Colorize;
 use solvent::DepGraph;
-use std::{env, fs::File, path::PathBuf};
+use std::{
+    env,
+    fs::{remove_dir_all, File},
+    path::PathBuf,
+};
 use tokio::{fs, io::AsyncWriteExt};
 use url::Url;
 #[tokio::main]
@@ -68,6 +72,7 @@ async fn main() -> std::io::Result<()> {
         let mut file = File::create(CONF_FILE.as_path()).unwrap();
         serde_yaml::to_writer(&mut file, &Configuration::gen()).unwrap()
     }
+
     // dependencies graph
     let mut run_depgraph: DepGraph<String> = DepGraph::new();
     let mut opt_depgraph: DepGraph<String> = DepGraph::new();
@@ -160,6 +165,11 @@ async fn main() -> std::io::Result<()> {
 
         match verb.as_ref() {
             "b" | "build" | "-b" | "--build" => {
+                if !PKG_DIR.to_path_buf().read_dir()?.next().is_none() {
+                    remove_dir_all(PKG_DIR.to_path_buf()).unwrap();
+                    prepare_bases(vec![PKG_DIR.to_path_buf()]).unwrap();
+                }
+
                 if let Some(pkgs) = packages {
                     let file_flag: String = pkgs[0].clone();
                     match file_flag.as_ref() {
