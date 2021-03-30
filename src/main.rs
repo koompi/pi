@@ -173,15 +173,14 @@ async fn main() -> std::io::Result<()> {
                                 target_package
                                     .build_all(&run_depgraph, &repo_config, &db)
                                     .await;
-                                // println!("{:?}", target_package)
                             }
                         }
                         _ => {
-                            // let target_package: BuildFile =
-                            //     BuildFile::from_file(PKG_FILE.to_path_buf()).unwrap();
-                            // target_package
-                            //     .build_all(&run_depgraph, &repo_config, &db)
-                            //     .await;
+                            let target_package: BuildFile =
+                                BuildFile::from_file(PKG_FILE.to_path_buf()).unwrap();
+                            target_package
+                                .build_all(&run_depgraph, &repo_config, &db)
+                                .await;
                         }
                     }
                 } else {

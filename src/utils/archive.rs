@@ -5,10 +5,11 @@ use crate::utils::prepare::prepare_base;
 use crate::{Application, BuildFile};
 use std::{
     fs::{create_dir_all, remove_file, File},
-    io::{Read, Result},
+    io::{Error, Read, Result},
     path::{Path, PathBuf},
 };
 use tar::Archive;
+use walkdir::WalkDir;
 use zip::ZipArchive;
 
 pub fn extract_archive(arg_file: &str, dest: &str) -> Result<()> {
@@ -57,7 +58,13 @@ pub fn create_archive(data: &BuildFile, path: PathBuf) {
     let archive_name = data.archive_name();
     let pkgf = File::create(&archive_name).unwrap();
     let mut tar = tar::Builder::new(pkgf);
-    tar.append_dir_all(".", path).unwrap();
+
+    tar.follow_symlinks(false);
+    match tar.append_dir_all(".", path) {
+        Ok(_) => {}
+        Err(e) => println!("{:#?}", e),
+    }
+
     compress_zstd(&archive_name).unwrap();
     remove_file(&archive_name).unwrap();
 }

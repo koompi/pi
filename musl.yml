@@ -1,0 +1,81 @@
+---
+metadata:
+    name: "musl"
+    version: "1.2.2"
+    release: 1
+    description: Lightweight implementation of C standard library
+    architecture:
+        - x86_64
+    licenses:
+        - MIT
+    project_url:
+        - musl-libc.org
+    project_ownder:
+        - Rich Felker
+sources:
+    - address: "http://www.musl-libc.org/releases/musl-1.2.2.tar.gz"
+      save_as: musl-1.2.2.tar.gz
+      extract: true
+      extract_to: ""
+    - address: "https://raw.githubusercontent.com/koompi/packages/core/musl/files/cdefs.h"
+      save_as: getconf.1
+      extract: false
+      extract_to: ~
+    - address: "https://raw.githubusercontent.com/koompi/packages/core/musl/files/getconf.1"
+      save_as: cdefs.h
+      extract: false
+      extract_to: ~
+    - address: "https://raw.githubusercontent.com/koompi/packages/core/musl/files/getconf.c"
+      save_as: getconf.c
+      extract: false
+      extract_to: ~
+    - address: "https://raw.githubusercontent.com/koompi/packages/core/musl/files/getent.1"
+      save_as: getent.1
+      extract: false
+      extract_to: ~
+    - address: "https://raw.githubusercontent.com/koompi/packages/core/musl/files/getent.c"
+      save_as: getent.c
+      extract: false
+      extract_to: ~
+    - address: "https://raw.githubusercontent.com/koompi/packages/core/musl/files/iconv.c"
+      save_as: iconv.c
+      extract: false
+      extract_to: ~
+    - address: "https://raw.githubusercontent.com/koompi/packages/core/musl/files/queue.h"
+      save_as: queue.h
+      extract: false
+      extract_to: ~
+    - address: "https://raw.githubusercontent.com/koompi/packages/core/musl/files/tree.h"
+      save_as: tree.h
+      extract: false
+      extract_to: ~
+
+security: ~
+dependencies: ~
+prepare: ~
+build: ~
+check: ~
+package:
+    commands:
+        - cd $SRCDIR/$PKGNAME-$PKGVER
+        - ./configure --prefix/usr
+        - make -j5
+        - make DESTDIR=$PKGDIR install
+        - mkdir -p $PKGDIR/usr/bin
+        - mkdir -p $PKGDIR/usr/include/sys
+        - ln -sf lib/libc.so $PKGDIR/usr/bin/ldd
+        - mkdir -p $PKGDIR/sbin
+        - ln -sv /bin/true $PKGDIR/sbin/ldconfig
+        - for i in getent getconf iconv; do
+        - ${CC:-gcc} $CFLAGS $LDFLAGS -fpie $SRCDIR/$i.c -o $PKGDIR/usr/bin/$i
+        - done
+        - mkdir -p $PKGDIR/usr/share/man/man1
+        - install -m644 $SRCDIR/getconf.1 $PKGDIR/usr/share/man/man1
+        - install -m644 $SRCDIR/getent.1 $PKGDIR/usr/share/man/man1
+
+        # -  bsdcompat headers
+        - for h in tree.h queue.h cdefs.h; do
+        - install -D $SRCDIR/$h $PKGDIR/usr/include/sys/
+        - done
+        - echo "Done"
+deployment: ~
