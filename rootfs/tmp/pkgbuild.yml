@@ -1,62 +1,44 @@
 ---
 metadata:
-    name: calamares
-    version: 3.2.39
-    release: 1
-    description: ~
-    architecture:
+  name: "binutils"
+  version: "2.36"
+  release: 1
+  description: A linker, an assembler, and other tools for handling object files
+  architecture:
         - x86_64
-    licenses:
-        - MIT
-    project_url:
-        - https://github.com/calamares/calamares
-    project_ownder:
-        - Calamares
+  licenses:
+        - GPL
+  project_url:
+        - https://www.gnu.org/
+  project_ownder:
+        - Stallman
 sources:
-    - address: git://github.com/calamares/calamares
-      save_as: calamares
-      extract: false
-      extract_to: ~
-
-    - address: https://archive.archlinux.org/packages/l/linux/linux-5.4.arch1-1-x86_64.pkg.tar.xz
-      save_as: linux-5.4.arch1-1-x86_64.pkg.tar.xz
-      extract: false
-      extract_to: ~
-
-    - address: "https://github.com/calamares/calamares/releases/download/v3.2.39/calamares-3.2.39.tar.gz"
-      save_as: calamares-3.2.39.tar.gz
-      extract: false
-      extract_to: ~
-
-    - address: "http://sourceware.org/ftp/elfutils/0.178/elfutils-0.178.tar.bz2"
-      save_as: elfutils-0.178.tar.bz2
-      extract: false
-      extract_to: ~
-
-    - address: https://dev.koompi.org/koompi/pix-v1.0.0-1-any.pkg.tar.zst
-      save_as: pix-v1.0.0-1-any.pkg.tar.zst
-      extract: false
-      extract_to: ~
-
-    - address: https://github.com/balena-io/etcher/releases/download/v1.5.116/balena-etcher-electron-1.5.116-linux-x64.zip
-      save_as: balena-etcher-electron-1.5.116-linux-x64.zip
-      extract: false
-      extract_to: ~
-
+    - address: https://ftp.gnu.org/gnu/binutils/binutils-2.36.tar.gz
+      save_as: binutils-2.36.tar.gz
+      extract: true
+      extract_to: ""
 security: ~
 dependencies: ~
+prepare: ~
+build: ~
 check: ~
-prepare:
-    commands:
-        - mkdir -p ${SRCDIR}/${PKGNAME}/build
-        - cd ${SRCDIR}/${PKGNAME}/build
-        - cmake -DCMAKE_BUILD_TYPE=Release ${SRCDIR}/${PKGNAME}
-build:
-    commands:
-        - cd ${SRCDIR}/${PKGNAME}/build
-        - make -j4
 package:
-    commands:
-        - cd ${SRCDIR}/${PKGNAME}/build
-        - make install PREFIX=/usr DESTDIR=${PKGDIR}
+  commands:
+        - cd $SRCDIR/$PKGNAME
+        - sed -i '/^SUBDIRS/s/doc//' bfd/Makefile.in
+        - mkdir -v build
+        - cd build
+        - '../configure
+                  --prefix=/usr
+                  --enable-gold
+                  --disable-nls
+                  --enable-ld=default
+                  --enable-plugins
+                  --enable-shared
+                  --disable-werror
+                  --with-system-zlib
+                  --disable-multilib
+                  --with-lib-path=/usr/lib:/lib'
+        - make tooldir=/usr
+        - make tooldir/usr DESTDIR=$PKGDIR install
 deployment: ~
