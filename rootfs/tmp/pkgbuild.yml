@@ -1,16 +1,16 @@
 ---
 metadata:
-  name: "binutils"
-  version: "2.36"
-  release: 1
-  description: A linker, an assembler, and other tools for handling object files
-  architecture:
+    name: "binutils"
+    version: "2.36"
+    release: 1
+    description: A linker, an assembler, and other tools for handling object files
+    architecture:
         - x86_64
-  licenses:
+    licenses:
         - GPL
-  project_url:
+    project_url:
         - https://www.gnu.org/
-  project_ownder:
+    project_ownder:
         - Stallman
 sources:
     - address: https://ftp.gnu.org/gnu/binutils/binutils-2.36.tar.gz
@@ -23,22 +23,22 @@ prepare: ~
 build: ~
 check: ~
 package:
-  commands:
+    commands:
         - cd $SRCDIR/$PKGNAME
         - sed -i '/^SUBDIRS/s/doc//' bfd/Makefile.in
         - mkdir -v build
         - cd build
-        - '../configure
-                  --prefix=/usr
-                  --enable-gold
-                  --disable-nls
-                  --enable-ld=default
-                  --enable-plugins
-                  --enable-shared
-                  --disable-werror
-                  --with-system-zlib
-                  --disable-multilib
-                  --with-lib-path=/usr/lib:/lib'
+        - "../configure
+          --prefix=/usr
+          --enable-gold
+          --disable-nls
+          --enable-ld=default
+          --enable-plugins
+          --enable-shared
+          --disable-werror
+          --with-system-zlib
+          --disable-multilib
+          --with-lib-path=/usr/lib:/lib"
         - make tooldir=/usr
         - make tooldir/usr DESTDIR=$PKGDIR install
 deployment: ~

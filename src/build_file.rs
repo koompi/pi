@@ -58,8 +58,8 @@ impl BuildFile {
                 "No pkgbuild.yml found in current directory",
             )),
             true => {
-                let file = File::open(PKG_FILE.display().to_string())
-                    .expect("Unable to read pkgbuild.yml");
+                let file =
+                    File::open(path.display().to_string()).expect("Unable to read pkgbuild.yml");
                 match serde_yaml::from_reader(file) {
                     Err(e) => Err(Error::new(ErrorKind::Other, e.to_string())),
                     Ok(pkg) => Ok(pkg),

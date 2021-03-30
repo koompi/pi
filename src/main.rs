@@ -161,14 +161,31 @@ async fn main() -> std::io::Result<()> {
         match verb.as_ref() {
             "b" | "build" | "-b" | "--build" => {
                 if let Some(pkgs) = packages {
-                    let ps: Vec<PathBuf> = pkgs.iter().map(|p| PathBuf::from(p)).collect();
-                    println!("{:?}", ps)
+                    let file_flag: String = pkgs[0].clone();
+                    match file_flag.as_ref() {
+                        "-f" | "--file" => {
+                            let files: Vec<PathBuf> =
+                                pkgs.iter().skip(1).map(|p| PathBuf::from(p)).collect();
+
+                            for package in files.iter() {
+                                let target_package: BuildFile =
+                                    BuildFile::from_file(package.to_path_buf()).unwrap();
+                                target_package
+                                    .build_all(&run_depgraph, &repo_config, &db)
+                                    .await;
+                                // println!("{:?}", target_package)
+                            }
+                        }
+                        _ => {
+                            // let target_package: BuildFile =
+                            //     BuildFile::from_file(PKG_FILE.to_path_buf()).unwrap();
+                            // target_package
+                            //     .build_all(&run_depgraph, &repo_config, &db)
+                            //     .await;
+                        }
+                    }
                 } else {
-                    let target_package: BuildFile =
-                        BuildFile::from_file(PKG_FILE.to_path_buf()).unwrap();
-                    target_package
-                        .build_all(&run_depgraph, &repo_config, &db)
-                        .await;
+                    help("build");
                 }
             }
             "g" | "generate" | "-g" | "--generate" => {
