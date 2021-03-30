@@ -1,0 +1,37 @@
+---
+metadata:
+    name: calamares
+    version: 3.2.39
+    release: 1
+    description: ~
+    architecture:
+        - x86_64
+    licenses:
+        - MIT
+    project_url:
+        - https://github.com/calamares/calamares
+    project_ownder:
+        - Calamares
+sources:
+    - address: "https://github.com/calamares/calamares/releases/download/v3.2.39/calamares-3.2.39.tar.gz"
+      save_as: calamares-3.2.39.tar.gz
+      extract: true
+      extract_to: ""
+
+security: ~
+dependencies: ~
+check: ~
+prepare:
+    commands:
+        - mkdir -p ${SRCDIR}/${PKGNAME}-${PKGVER}/build
+        - cd ${SRCDIR}/${PKGNAME}-${PKGVER}/build
+        - cmake -DCMAKE_BUILD_TYPE=Release ${SRCDIR}/${PKGNAME}-${PKGVER}
+build:
+    commands:
+        - cd ${SRCDIR}${PKGNAME}-${PKGVER}/build
+        - make -j16
+package:
+    commands:
+        - cd ${SRCDIR}/${PKGNAME}-${PKGVER}/build
+        - make install PREFIX=/usr DESTDIR=${PKGDIR}
+deployment: ~

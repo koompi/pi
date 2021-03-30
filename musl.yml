@@ -65,7 +65,7 @@ package:
         - mkdir -p $PKGDIR/usr/include/sys
         - ln -sf lib/libc.so $PKGDIR/usr/bin/ldd
         - mkdir -p $PKGDIR/sbin
-        - ln -sv /bin/true $PKGDIR/sbin/ldconfig
+        - ln -svf /bin/true $PKGDIR/sbin/ldconfig
         - for i in getent getconf iconv; do
         - ${CC:-gcc} $CFLAGS $LDFLAGS -fpie $SRCDIR/$i.c -o $PKGDIR/usr/bin/$i
         - done
