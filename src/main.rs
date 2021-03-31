@@ -1,10 +1,10 @@
-#![allow(
-    unused_variables,
-    unused_imports,
-    dead_code,
-    unused_mut,
-    unused_assignments
-)]
+// #![allow(
+//     unused_variables,
+//     unused_imports,
+//     dead_code,
+//     unused_mut,
+//     unused_assignments
+// )]
 pub mod utils;
 
 mod application;
@@ -48,7 +48,6 @@ use std::{
     fs::{remove_dir_all, File},
     path::PathBuf,
 };
-use tokio::{fs, io::AsyncWriteExt};
 use url::Url;
 #[tokio::main]
 async fn main() -> std::io::Result<()> {

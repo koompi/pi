@@ -1,10 +1,9 @@
-use crate::{source, Configuration};
+use crate::Configuration;
 
 use crate::{
-    statics::{MANI_FILE, PKG_DIR, PKG_FILE, SRC_DIR},
+    statics::{MANI_FILE, PKG_DIR, SRC_DIR},
     utils::{create_archive, decompress_all, download_git, download_http, read_to_vec_u8},
     Application, BinDatabase, Dependency, Deployment, Function, Metadata, Security, Source,
-    SourceDatabase,
 };
 use colored::Colorize;
 use serde::{Deserialize, Serialize};
@@ -96,7 +95,7 @@ impl BuildFile {
                     if !not_installed_deps.is_empty() {
                         for bdep in not_installed_deps.iter() {
                             match bdb.find(config, bdep) {
-                                Some(a) => to_install_deps.push(bdep.clone()),
+                                Some(_) => to_install_deps.push(bdep.clone()),
                                 None => missing_deps.push(bdep.clone()),
                             }
                         }
@@ -131,9 +130,9 @@ impl BuildFile {
     }
 
     pub fn build(&self) -> Result<(), String> {
-        let name = &self.metadata.name;
-        let version = &self.metadata.version;
-        let release = self.metadata.release;
+        // let name = &self.metadata.name;
+        // let version = &self.metadata.version;
+        // let _release = self.metadata.release;
         if let Some(prepare_script) = &self.prepare {
             println!("{}", "PREPARING BUILD".green().bold());
             match prepare_script.exec(&self) {

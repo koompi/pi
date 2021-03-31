@@ -1,5 +1,5 @@
 use super::Application;
-use crate::utils::{decompress_all, decompress_zstd, download_http, extract_archive};
+use crate::utils::{decompress_zstd, download_http, extract_archive};
 use crate::{Configuration, CACHE_DIR, LOCAL_DIR, ROOT_DIR, SUFFIX_APP, SYNC_DIR};
 use colored::Colorize;
 use indicatif::ProgressBar;
@@ -74,7 +74,7 @@ impl BinDatabase {
         let mut to_install_name: Vec<String> = Vec::new();
         let mut to_install: Vec<TargetPackage> = Vec::new();
         let mut missing_from_db: Vec<String> = Vec::new();
-        let mut to_downloads: Vec<String> = Vec::new();
+        // let to_downloads: Vec<String> = Vec::new();
 
         for package in packages.iter() {
             if let None = &self.find(repo_config, package) {
@@ -146,7 +146,7 @@ impl BinDatabase {
                         let file_path = CACHE_DIR
                             .to_path_buf()
                             .join(format!("{}.app", &target.package.archive_name()));
-                        let mut target_str = file_path.to_str().unwrap().to_string();
+                        let target_str = file_path.to_str().unwrap().to_string();
 
                         decompress_zstd(&target_str).unwrap();
                         extract_archive(
@@ -170,8 +170,8 @@ impl BinDatabase {
 
     pub async fn install_files(
         &self,
-        rd: &DepGraph<String>,
-        repo_config: &Configuration,
+        _rd: &DepGraph<String>,
+        _repo_config: &Configuration,
         packages: Vec<PathBuf>,
     ) -> std::io::Result<()> {
         let mut tar_files: Vec<String> = Vec::new();
@@ -293,7 +293,7 @@ impl BinDatabase {
                 let file = File::open(app_path).unwrap();
                 match serde_yaml::from_reader(file) {
                     Ok(d) => res.push(d),
-                    Err(e) => {}
+                    Err(_) => {}
                 }
             }
         }
@@ -325,7 +325,7 @@ impl BinRepo {
     pub fn get_run_dependencies(&self) -> DepGraph<String> {
         let mut depgraph: DepGraph<String> = DepGraph::new();
         if !self.applications.is_empty() {
-            for (name, app) in self.applications.iter() {
+            for (_name, app) in self.applications.iter() {
                 let name = app.metadata.name.to_string();
                 if let Some(deps) = &app.dependencies {
                     if let Some(run_deps) = &deps.run_dependencies {
@@ -343,7 +343,7 @@ impl BinRepo {
     pub fn get_opt_dependencies(&self) -> DepGraph<String> {
         let mut depgraph: DepGraph<String> = DepGraph::new();
         if !self.applications.is_empty() {
-            for (name, app) in self.applications.iter() {
+            for (_name, app) in self.applications.iter() {
                 let name = app.metadata.name.to_string();
                 if let Some(deps) = &app.dependencies {
                     if let Some(run_deps) = &deps.opt_dependencies {
@@ -361,7 +361,7 @@ impl BinRepo {
     pub fn get_build_dependencies(&self) -> DepGraph<String> {
         let mut depgraph: DepGraph<String> = DepGraph::new();
         if !self.applications.is_empty() {
-            for (name, app) in self.applications.iter() {
+            for (_name, app) in self.applications.iter() {
                 let name = app.metadata.name.to_string();
                 if let Some(deps) = &app.dependencies {
                     if let Some(run_deps) = &deps.build_dependencies {
@@ -379,7 +379,7 @@ impl BinRepo {
     pub fn get_test_dependencies(&self) -> DepGraph<String> {
         let mut depgraph: DepGraph<String> = DepGraph::new();
         if !self.applications.is_empty() {
-            for (name, app) in self.applications.iter() {
+            for (_name, app) in self.applications.iter() {
                 let name = app.metadata.name.to_string();
                 if let Some(deps) = &app.dependencies {
                     if let Some(run_deps) = &deps.test_dependencies {

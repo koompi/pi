@@ -1,15 +1,13 @@
 use super::compress::compress_zstd;
 use crate::statics::LOCAL_DIR;
-use crate::statics::*;
 use crate::utils::prepare::prepare_base;
 use crate::{Application, BuildFile};
 use std::{
     fs::{create_dir_all, remove_file, File},
-    io::{Error, Read, Result},
+    io::{Read, Result},
     path::{Path, PathBuf},
 };
 use tar::Archive;
-use walkdir::WalkDir;
 use zip::ZipArchive;
 
 pub fn extract_archive(arg_file: &str, dest: &str) -> Result<()> {

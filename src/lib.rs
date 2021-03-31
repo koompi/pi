@@ -1,10 +1,3 @@
-#![allow(
-    unused_variables,
-    unused_imports,
-    dead_code,
-    unused_mut,
-    unused_assignments
-)]
 pub mod application;
 pub mod architecture;
 pub mod bin_database;

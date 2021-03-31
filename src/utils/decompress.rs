@@ -1,4 +1,3 @@
-use crate::statics::*;
 use crate::utils::{extract_archive, extract_zip};
 use bzip2::read::BzDecoder;
 use colored::Colorize;
@@ -8,10 +7,9 @@ use std::{
     fs::{create_dir_all, File, OpenOptions},
     io::*,
     path::PathBuf,
-    process::{Command, Stdio},
     str,
 };
-use tar::{Archive, Unpacked};
+use tar::Archive;
 use xz2::read::XzDecoder;
 use zstd::Decoder;
 
@@ -44,11 +42,11 @@ pub fn decompress_all(source: &str, dest: &str) -> Result<()> {
                 let new_dir_path = new_file_path.clone();
 
                 if !new_dir_path.parent().unwrap().exists() {
-                    create_dir_all(new_dir_path.parent().unwrap());
+                    create_dir_all(new_dir_path.parent().unwrap()).unwrap();
                 }
                 file.set_unpack_xattrs(true);
                 match file.unpack(new_file_path) {
-                    Ok(d) => pb.set_message(&format!("{:?}", &file.path().unwrap())),
+                    Ok(_) => pb.set_message(&format!("{:?}", &file.path().unwrap())),
                     Err(e) => println!("{}", &e.to_string().red()),
                 }
             }
@@ -76,11 +74,11 @@ pub fn decompress_all(source: &str, dest: &str) -> Result<()> {
                 let new_dir_path = new_file_path.clone();
 
                 if !new_dir_path.parent().unwrap().exists() {
-                    create_dir_all(new_dir_path.parent().unwrap());
+                    create_dir_all(new_dir_path.parent().unwrap()).unwrap();
                 }
                 file.set_unpack_xattrs(true);
                 match file.unpack(new_file_path) {
-                    Ok(d) => pb.set_message(&format!("{:?}", &file.path().unwrap())),
+                    Ok(_) => pb.set_message(&format!("{:?}", &file.path().unwrap())),
                     Err(e) => println!("{}", &e.to_string().red()),
                 }
             }
@@ -106,11 +104,11 @@ pub fn decompress_all(source: &str, dest: &str) -> Result<()> {
                 let new_dir_path = new_file_path.clone();
 
                 if !new_dir_path.parent().unwrap().exists() {
-                    create_dir_all(new_dir_path.parent().unwrap());
+                    create_dir_all(new_dir_path.parent().unwrap()).unwrap();
                 }
                 file.set_unpack_xattrs(true);
                 match file.unpack(new_file_path) {
-                    Ok(d) => pb.set_message(&format!("{:?}", &file.path().unwrap())),
+                    Ok(_) => pb.set_message(&format!("{:?}", &file.path().unwrap())),
                     Err(e) => println!("{}", &e.to_string().red()),
                 }
             }

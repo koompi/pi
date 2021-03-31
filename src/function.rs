@@ -1,6 +1,5 @@
 use crate::statics::*;
 use crate::BuildFile;
-use colored::Colorize;
 use num_cpus;
 use serde::{Deserialize, Serialize};
 use std::{env, error::Error, io::ErrorKind};

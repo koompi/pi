@@ -1,7 +1,5 @@
-use actix_web::dev::Path;
 use lazy_static::*;
-use std::sync::Mutex;
-use std::{env, io::Error, path::PathBuf};
+use std::{env, path::PathBuf};
 
 #[macro_export]
 lazy_static! {

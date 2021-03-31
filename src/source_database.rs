@@ -44,7 +44,7 @@ impl SourceRepo {
     pub fn get_run_dependencies(&self) -> DepGraph<String> {
         let mut depgraph: DepGraph<String> = DepGraph::new();
         if !self.applications.is_empty() {
-            for (name, app) in self.applications.iter() {
+            for (_name, app) in self.applications.iter() {
                 let name = app.metadata.name.to_string();
                 if let Some(deps) = &app.dependencies {
                     if let Some(run_deps) = &deps.run_dependencies {
@@ -62,7 +62,7 @@ impl SourceRepo {
     pub fn get_opt_dependencies(&self) -> DepGraph<String> {
         let mut depgraph: DepGraph<String> = DepGraph::new();
         if !self.applications.is_empty() {
-            for (name, app) in self.applications.iter() {
+            for (_name, app) in self.applications.iter() {
                 let name = app.metadata.name.to_string();
                 if let Some(deps) = &app.dependencies {
                     if let Some(run_deps) = &deps.opt_dependencies {
@@ -80,7 +80,7 @@ impl SourceRepo {
     pub fn get_build_dependencies(&self) -> DepGraph<String> {
         let mut depgraph: DepGraph<String> = DepGraph::new();
         if !self.applications.is_empty() {
-            for (name, app) in self.applications.iter() {
+            for (_name, app) in self.applications.iter() {
                 let name = app.metadata.name.to_string();
                 if let Some(deps) = &app.dependencies {
                     if let Some(run_deps) = &deps.build_dependencies {
@@ -98,7 +98,7 @@ impl SourceRepo {
     pub fn get_test_dependencies(&self) -> DepGraph<String> {
         let mut depgraph: DepGraph<String> = DepGraph::new();
         if !self.applications.is_empty() {
-            for (name, app) in self.applications.iter() {
+            for (_name, app) in self.applications.iter() {
                 let name = app.metadata.name.to_string();
                 if let Some(deps) = &app.dependencies {
                     if let Some(run_deps) = &deps.test_dependencies {

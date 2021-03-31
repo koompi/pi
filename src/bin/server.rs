@@ -1,12 +1,11 @@
 use actix_files as fs;
-use actix_web::{get, web, App, HttpRequest, HttpResponse, HttpServer, Result};
+use actix_web::{web, App, HttpRequest, HttpResponse, HttpServer};
 use pi::{
     statics::{PUB_DIR, SERVER_CFG_DIR, SERVER_CFG_FILE},
     utils::prepare_bases,
     BinRepo,
 };
 use serde::{Deserialize, Serialize};
-use serde_yaml::from_reader;
 use std::{env, fs::File, path::PathBuf, time::SystemTime};
 
 #[derive(Debug, Clone, Deserialize, Serialize)]
@@ -57,7 +56,7 @@ fn cfg_data() -> ServerConfig {
     cfg
 }
 
-async fn with_param(req: HttpRequest, web::Path((name,)): web::Path<(String,)>) -> HttpResponse {
+async fn with_param(_req: HttpRequest, web::Path((name,)): web::Path<(String,)>) -> HttpResponse {
     let cfg = cfg_data();
     let db_dir = PathBuf::from(&cfg.repo_root);
     let db_path = db_dir.join(&format!("{}/{}.db", &name, &name));

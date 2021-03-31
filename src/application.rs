@@ -1,8 +1,7 @@
 use super::{
     statics::{LOCAL_DIR, MANI_FILE},
-    Dependency, Deployment, Function, Metadata, Security, Source,
+    Dependency, Metadata, Security,
 };
-use semver::Version;
 
 use serde::{Deserialize, Serialize};
 use std::{

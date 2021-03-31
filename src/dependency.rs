@@ -16,9 +16,9 @@ impl Dependency {
 
     pub fn check_build_dependencies(&self) -> Result<(), Vec<String>> {
         let mut missing_deps: Vec<String> = Vec::new();
-        let mut missing_from_bin_db: Vec<String> = Vec::new();
-        let mut missing_from_source_db: Vec<String> = Vec::new();
-        let mut missing_from_given_args: Vec<String> = Vec::new();
+        let _missing_from_bin_db: Vec<String> = Vec::new();
+        let _missing_from_source_db: Vec<String> = Vec::new();
+        let _missing_from_given_args: Vec<String> = Vec::new();
 
         match &self.build_dependencies {
             Some(deps) => {
@@ -46,7 +46,7 @@ impl Dependency {
     }
 
     pub fn check_opt_dependencies(&self) -> Result<(), Vec<String>> {
-        let mut missing_deps: Vec<String> = Vec::new();
+        let _missing_deps: Vec<String> = Vec::new();
 
         match &self.opt_dependencies {
             Some(deps) => {
@@ -63,7 +63,7 @@ impl Dependency {
     }
 
     pub fn check_run_dependencies(&self) -> Result<(), Vec<String>> {
-        let mut missing_deps: Vec<String> = Vec::new();
+        let _missing_deps: Vec<String> = Vec::new();
 
         match &self.build_dependencies {
             Some(deps) => {
@@ -81,7 +81,7 @@ impl Dependency {
     }
 
     pub fn check_test_dependencies(&self) -> Result<(), Vec<String>> {
-        let mut missing_deps: Vec<String> = Vec::new();
+        let _missing_deps: Vec<String> = Vec::new();
 
         match &self.build_dependencies {
             Some(deps) => {

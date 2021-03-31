@@ -1,7 +1,7 @@
 use anyhow::anyhow;
 use git2::{ErrorCode, Repository};
 use indicatif::{ProgressBar, ProgressStyle};
-use reqwest::{header, redirect::Policy, Client};
+use reqwest::{header, redirect::Policy};
 use std::fs::remove_dir_all;
 use std::path::Path;
 use tokio::{fs, io::AsyncWriteExt};

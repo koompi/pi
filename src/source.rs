@@ -1,7 +1,3 @@
-use crate::{
-    statics::SRC_DIR,
-    utils::{decompress_all, download_git, download_http},
-};
 use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Debug, Default, Deserialize, Serialize)]

@@ -1,9 +1,6 @@
 use serde::{Deserialize, Serialize};
 use serde_yaml::from_reader;
-use std::{
-    fs::File,
-    path::{Path, PathBuf},
-};
+use std::{fs::File, path::PathBuf};
 
 #[derive(Debug, Clone, Deserialize, Serialize)]
 pub struct Configuration {

@@ -1,5 +1,5 @@
 use pi::statics::SUFFIX_APP;
-use pi::utils::{decompress_zstd, extract_archive};
+use pi::utils::decompress_zstd;
 use pi::{Application, BinRepo};
 use serde_yaml::{from_reader, to_writer};
 use std::time::SystemTime;
@@ -71,7 +71,7 @@ fn create(path: &str) -> Result<(), Error> {
         }
     }
 
-    let mut file = File::create(path)?;
+    let file = File::create(path)?;
     let data = BinRepo::new();
     match to_writer(file, &data) {
         Ok(_) => Ok(()),
@@ -87,7 +87,7 @@ fn update_db(path: &str, data: &BinRepo) -> Result<(), Error> {
         }
     }
 
-    let mut file = File::create(path)?;
+    let file = File::create(path)?;
     // let data = BinRepo::default();
     match to_writer(file, data) {
         Ok(_) => Ok(()),
@@ -143,7 +143,7 @@ fn add(db_path: &str, pkg_files: Vec<PathBuf>) {
     }
     let now = SystemTime::now();
     db.date = now;
-    update_db(db_path, &db);
+    update_db(db_path, &db).unwrap();
 }
 
 fn remove(db_path: &str, pkg_files: Vec<PathBuf>) {
@@ -161,7 +161,7 @@ fn remove(db_path: &str, pkg_files: Vec<PathBuf>) {
     }
     let now = SystemTime::now();
     db.date = now;
-    update_db(db_path, &db);
+    update_db(db_path, &db).unwrap();
 }
 
 fn help() {
