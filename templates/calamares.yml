@@ -29,7 +29,7 @@ prepare:
 build:
     commands:
         - cd ${SRCDIR}${PKGNAME}-${PKGVER}/build
-        - make -j16
+        - make -j 16
 package:
     commands:
         - cd ${SRCDIR}/${PKGNAME}-${PKGVER}/build

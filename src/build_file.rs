@@ -130,24 +130,48 @@ impl BuildFile {
         }
     }
 
-    pub fn build(&self) {
+    pub fn build(&self) -> Result<(), String> {
         let name = &self.metadata.name;
         let version = &self.metadata.version;
         let release = self.metadata.release;
         if let Some(prepare_script) = &self.prepare {
             println!("{}", "PREPARING BUILD".green().bold());
-            prepare_script.exec(&self).unwrap();
+            match prepare_script.exec(&self) {
+                Ok(_) => {}
+                Err(e) => {
+                    eprintln!("{}", e.to_string().red());
+                    return Err((*e).to_string());
+                }
+            }
         }
         if let Some(build_script) = &self.build {
             println!("{}", "RUNNING BUILD".green().bold());
-            build_script.exec(&self).unwrap();
+            match build_script.exec(&self) {
+                Ok(_) => {}
+                Err(e) => {
+                    eprintln!("{}", e.to_string().red());
+                    return Err((*e).to_string());
+                }
+            }
         }
         if let Some(check_script) = &self.check {
             println!("{}", "CHECKING BUILD".green().bold());
-            check_script.exec(&self).unwrap();
+            match check_script.exec(&self) {
+                Ok(_) => {}
+                Err(e) => {
+                    eprintln!("{}", e.to_string().red());
+                    return Err((*e).to_string());
+                }
+            }
         }
         println!("{}", "PACKING BUILD".green().bold());
-        self.package.exec(&self).unwrap();
+        match self.package.exec(&self) {
+            Ok(_) => Ok(()),
+            Err(e) => {
+                eprintln!("{}", e.to_string().red());
+                return Err((*e).to_string());
+            }
+        }
     }
 
     pub async fn pull_one(&self, app_name: &str, path_name: &str, source_address: &str) {
@@ -206,10 +230,25 @@ impl BuildFile {
         bdb: &BinDatabase,
     ) {
         &self.check_build_dependencies(&rd, &config, &bdb).await;
-        &self.pull_all().await;
-        &self.build();
-        &self.to_app().write().unwrap();
-        &self.create_package();
+        match &self.pull_all().await {
+            Ok(_) => match self.build() {
+                Ok(_) => match self.to_app().write() {
+                    Ok(_) => self.create_package(),
+                    Err(e) => {
+                        eprintln!("{}", &e.to_string().red());
+                        std::process::exit(1);
+                    }
+                },
+                Err(e) => {
+                    eprintln!("{}", &e.to_string().red());
+                    std::process::exit(1);
+                }
+            },
+            Err(e) => {
+                eprintln!("{}", &e.to_string().red());
+                std::process::exit(1);
+            }
+        }
     }
 
     pub fn archive_name(&self) -> String {

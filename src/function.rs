@@ -1,10 +1,10 @@
 use crate::statics::*;
 use crate::BuildFile;
 use colored::Colorize;
+use num_cpus;
 use serde::{Deserialize, Serialize};
-use shellfn::shell;
-use std::error::Error;
-
+use std::{env, error::Error, io::ErrorKind};
+use subprocess::{Exec, ExitStatus};
 #[derive(Clone, Debug, Default, Deserialize, Serialize)]
 
 pub struct Function {
@@ -17,7 +17,7 @@ impl Function {
         // Commands to  execute
         let mut commands = self.commands.clone();
         commands.push(String::from("exit"));
-        let cmd = &self.commands.join("\n").to_string();
+        let cmds = &self.commands.join("\n").to_string();
 
         // Envronment varialbes
         let basedir = CWD_DIR.to_str().unwrap();
@@ -27,28 +27,60 @@ impl Function {
         let pkgver = &pkgdata.metadata.version;
         let pkgrel = &pkgdata.metadata.release;
 
-        match run(cmd, basedir, srcdir, pkgdir, &pkgname, &pkgver, *pkgrel) {
-            Ok(d) => {
-                d.for_each(|res| {
-                    println!("{}", res);
-                });
-            }
-            Err(e) => println!("{}", e.to_string().on_red()),
+        let num = num_cpus::get();
+        env::set_var("MAKEFLAGS", &format!("-j {}", num));
+        env::set_var("PKGNAME", pkgname);
+        env::set_var("PKGVER", pkgver);
+        env::set_var("PKGREL", pkgrel.to_string());
+        env::set_var("BASEDIR", basedir);
+        env::set_var("SRCDIR", srcdir);
+        env::set_var("PKGDIR", pkgdir);
+
+        match Exec::shell(cmds).join() {
+            Ok(ex) => match ex.success() {
+                true => Ok(()),
+                false => match ex {
+                    ExitStatus::Exited(e) => Err(Box::new(std::io::Error::new(
+                        ErrorKind::Other,
+                        format!("Process exited with code: {}", e),
+                    ))),
+                    ExitStatus::Signaled(e) => Err(Box::new(std::io::Error::new(
+                        ErrorKind::Other,
+                        format!("Process exited with code: {}", e),
+                    ))),
+                    ExitStatus::Other(e) => Err(Box::new(std::io::Error::new(
+                        ErrorKind::Other,
+                        format!("Process exited with code: {}", e),
+                    ))),
+                    ExitStatus::Undetermined => Err(Box::new(std::io::Error::new(
+                        ErrorKind::Other,
+                        "Undetermined",
+                    ))),
+                },
+            },
+            Err(e) => Err(Box::new(e)),
         }
 
-        Ok(())
+        // match run(cmd, basedir, srcdir, pkgdir, &pkgname, &pkgver, *pkgrel) {
+        //     Ok(d) => {
+        //         d.for_each(|res| {
+        //             println!("{}", res);
+        //         });
+        //     }
+        //     Err(e) => println!("{}", e.to_string().on_red()),
+        // }
     }
 }
 
-#[shell(cmd = "fakeroot sh -c $MODULE")]
-pub fn run(
-    module: &str,
-    basedir: &str,
-    srcdir: &str,
-    pkgdir: &str,
-    pkgname: &str,
-    pkgver: &str,
-    pkgrel: u32,
-) -> Result<impl Iterator<Item = String>, Box<Error>> {
-    ""
-}
+// #[shell(cmd = "fakeroot sh -c $MODULE")]
+// pub fn run(
+//     module: &str,
+//     basedir: &str,
+//     srcdir: &str,
+//     pkgdir: &str,
+//     pkgname: &str,
+//     pkgver: &str,
+//     pkgrel: u32,
+// ) -> Result<impl Iterator<Item = String>, Box<Error>> {
+//     ""
+// }
