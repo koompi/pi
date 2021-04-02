@@ -14,7 +14,11 @@ impl Function {
     pub fn exec(&self, pkgdata: &BuildFile) -> Result<(), Box<dyn Error>> {
         // pub fn exec(&self, pkgdata: &BuildFile) -> Result<(), Box<dyn Error>> {
         // Commands to  execute
-        let mut commands = self.commands.clone();
+        // let mut commands = self.commands.clone();
+        let mut commands = Vec::new();
+        commands.push(String::from("set -e"));
+        commands.push(String::from("fakeroot"));
+        commands.append(self.commands.clone().as_mut());
         commands.push(String::from("exit"));
         let cmds = &self.commands.join("\n").to_string();
 
