@@ -33,10 +33,19 @@ lazy_static! {
 }
 
 fn root() -> PathBuf {
-    if cfg!(debug_assertions) {
-        env::current_dir().unwrap().join("rootfs")
-    } else {
-        PathBuf::from("/")
+    let key = "ROOT";
+    match env::var(key) {
+        Ok(val) => {
+            println!("Using custom root at: {:?}", &val);
+            PathBuf::from(&val)
+        }
+        Err(e) => {
+            if cfg!(debug_assertions) {
+                env::current_dir().unwrap().join("rootfs")
+            } else {
+                PathBuf::from("/")
+            }
+        }
     }
 }
 

@@ -44,7 +44,7 @@ async fn main() -> std::io::Result<()> {
                 .service(web::resource("/version/{name}").route(web::get().to(with_param)))
                 .service(fs::Files::new("/", &cfg.repo_root).show_files_listing())
         })
-        .bind("127.0.0.1:3690")?
+        .bind("0.0.0.0:3690")?
         .run()
         .await
     }
