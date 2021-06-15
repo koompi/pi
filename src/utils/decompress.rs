@@ -46,7 +46,9 @@ pub fn decompress_all(source: &str, dest: &str) -> Result<()> {
                 }
                 file.set_unpack_xattrs(true);
                 match file.unpack(new_file_path) {
-                    Ok(_) => pb.set_message(&format!("{:?}", &file.path().unwrap())),
+                    // Ok(_) => pb.set_message(&format!("{:?}", &file.path().unwrap())),
+                    Ok(_) => pb.set_message(format!("{:?}", &file.path().as_ref().unwrap())),
+                    // Ok(_) => pb.set_message(file.path().as_ref().unwrap()),
                     Err(e) => println!("{}", &e.to_string().red()),
                 }
             }
@@ -78,7 +80,7 @@ pub fn decompress_all(source: &str, dest: &str) -> Result<()> {
                 }
                 file.set_unpack_xattrs(true);
                 match file.unpack(new_file_path) {
-                    Ok(_) => pb.set_message(&format!("{:?}", &file.path().unwrap())),
+                    Ok(_) => pb.set_message(format!("{:?}", &file.path().as_ref().unwrap())),
                     Err(e) => println!("{}", &e.to_string().red()),
                 }
             }
@@ -108,7 +110,7 @@ pub fn decompress_all(source: &str, dest: &str) -> Result<()> {
                 }
                 file.set_unpack_xattrs(true);
                 match file.unpack(new_file_path) {
-                    Ok(_) => pb.set_message(&format!("{:?}", &file.path().unwrap())),
+                    Ok(_) => pb.set_message(format!("{:?}", &file.path().as_ref().unwrap())),
                     Err(e) => println!("{}", &e.to_string().red()),
                 }
             }

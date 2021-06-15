@@ -23,6 +23,11 @@ impl ServerConfig {
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
+    // For first run
+    // dev
+    // cargo run --bin server -- g
+    // pro
+    // sudo server -g
     let args: Vec<String> = env::args_os()
         .skip(1)
         .map(|a| a.to_str().unwrap().to_string())
@@ -36,6 +41,7 @@ async fn main() -> std::io::Result<()> {
             serde_yaml::to_writer(&mut file, &ServerConfig::new()).unwrap();
         }
         Ok(())
+
     } else {
         HttpServer::new(|| {
             let cfg = cfg_data();
