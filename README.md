@@ -16,10 +16,10 @@ Pi is a package manager built in Rust that aims to be unique, fast, secure, and 
 
 ## Installing Pi
 
-`git clone https://github.com/koompi/pi`
-`cd pi`
-`chmod +x build.sh`
-`./build.sh`
+- `git clone https://github.com/koompi/pi`
+- `cd pi`
+- `chmod +x build.sh`
+- `./build.sh`
 
 ### Requirements
 
