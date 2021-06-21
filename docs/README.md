@@ -58,7 +58,7 @@ The example of `pkgbuild.yml` as follows:
 * `project_url`: Package's url.
 * `project_owner`: People that create the project.
 * `sources`:  address: package source to download.
-* `save_as`: name the name you download.
+* `save_as`: name the package you download.
 * `extract`: false or true.
 * `extract_to`: leave it empty "" or put the location.
 * `security`: todo!
@@ -68,76 +68,85 @@ The example of `pkgbuild.yml` as follows:
 * `check`: todo!
 * `package`: todo!
 * `command`: command for building the source file. Check this to learn about [command](./command.md).
+* `deployment`: todo!
 
 
+## Server:
 
-
-
-
-
-
-
-
-
-
-
-1. Building services assuming you are already familiar with Rust.
+### Generate server config
 
     ```bash
-    cargo build --bin pi
-    cargo build --bin server
-    cargo build --bin bin-repo
+    server config
     ```
-
-2. Generate server config
+### Run the server
 
     ```bash
-    cargo run --bin server -- config
+    server -g
     ```
+    note* for the first time, it requires to run -g arg*
 
-3. Run the server
+## Bin-repo:
+
+- bin-repo use for creating repository to register our package.app after finished build the package.
+
+`To generate a new binary repo.`
 
     ```bash
-    cargo run --bin server
+    sudo bin-repo create /var/www/repo_name/repo_name.db
     ```
-
-4. Generate pkgbuild.yml template.
+`To add the package.app to the repo`
 
     ```bash
-    cargo run --bin pi -- g
+    sudo bin-repo add /var/www/repo_name/repo_name.db package.app
     ```
 
-5. Fill in you pkgbuild file and copy it to `rootfs/tmp` and start building.
+`To remove the package.app from the repo`
 
     ```bash
-    cargo run --bin pi -- b
+    sudo bin-repo remove /var/www/repo_name/repo_name.db package_name
     ```
 
-6. After you finish building, there will a new package with a `.app` extenstion. Now it is time to register it to the repo.
+## Pi:
 
-    1. First you need to generate a new binary repo.
-
-        ```bash
-        cargo run --bin bin-repo -- create rootfs/var/www/repo_name/repo_name.db        # generate a new repo
-        ```
-
-    2. Add the `package.app` to the repo
-
-        ```bash
-        cargo run --bin bin-repo -- add rootfs/var/www/repo_name/repo_name.db package.app
-        cargo run --bin bin-repo -- remove rootfs/var/www/repo_name/repo_name.db package_name
-        ```
-
-7. Now it is time to run the package manager
+### Generate pkgbuild.yml template.
 
     ```bash
-    cargo run --bin pi -- update
-    cargo run --bin pi -- install the_app_name
-    cargo run --bin pi -- remove the app_name
+    pi g
+    ```
+
+### Build Port
+
+- After generate the template, you can modify it for the package you want to port.
+
+    ```bash
+    pi build
+    ```
+- After you finish building, there will a new package with a `.app` extenstion. Now it is time to register it to the repo.
+
+
+    ```bash
+    bin-repo add rootfs/var/www/repo_name/repo_name.db package.app
+    bin-repo remove rootfs/var/www/repo_name/repo_name.db package_name
+    ```
+
+### Install App
+
+    ```bash
+    pi install package_name
+    ```
+
+### Remove App
+
+    ```bash
+    pi remove package_name
     ```
 
 
+### Update Repo
 
+    ```bash
+    pi update
+    ```
 
 
 
