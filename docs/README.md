@@ -1,8 +1,5 @@
 <h1 align="Center"> Documentation
-
 <h3 align="center">PI Package Manager </h1>
-
-
 
 
 ## Description
@@ -50,7 +47,7 @@ The example of `pkgbuild.yml` as follows:
 
 
 
-#### pkgbuild.yml format:
+## pkgbuild.yml format:
 
 * `name`: Package name.
 * `version`: Package's version.
@@ -59,12 +56,18 @@ The example of `pkgbuild.yml` as follows:
 * `architecture`: Package's architecture. example: x86_64
 * `licenses`: Package's licenses.
 * `project_url`: Package's url.
-* `project_owner`: People that create the project
-* `noextract`: Specify file no need to extract, separate with space.
-* `nostrip`: list file to avoid strip, can use regex
-* `source`: Package's source urls, separate with space, can use as `<new-source-name>::<source-url>` to save source file with different name (see `spkgbuild` example).
-
-
+* `project_owner`: People that create the project.
+* `sources`:  address: package source to download.
+* `save_as`: name the name you download.
+* `extract`: false or true.
+* `extract_to`: leave it empty "" or put the location.
+* `security`: todo!
+* `dependencies`: run_dependencies, build_dependencies, see examples on how to use this [features](./dependencies.md).
+* `prepare`: todo!
+* `build`: todo!
+* `check`: todo!
+* `package`: todo!
+* `command`: command for building the source file. Check this to learn about [command](./command.md).
 
 
 
@@ -132,3 +135,24 @@ The example of `pkgbuild.yml` as follows:
     cargo run --bin pi -- install the_app_name
     cargo run --bin pi -- remove the app_name
     ```
+
+
+
+
+
+
+
+
+
+
+
+
+## pkgbuild.yml variables
+
+- MAKEFLAGS
+- PKGNAME
+- PKGVER
+- PKGREL,
+- BASEDIR
+- SRCDIR
+- PKGDIR
