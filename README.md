@@ -28,9 +28,8 @@ Pi is a package manager built in Rust that aims to be unique, fast, secure, and 
 
 ## Documentation
 
-In order to learn more about our package manager you can visit our documentation file [here](./docs/getting_start.md).
+In order to learn more about our package manager you can visit our documentation file [here](./docs/).
 
 ## Contributing to Pi
 
 Contributions are always welcome, no matter how large or small. Substantial feature requests should be proposed as an issue. Before contributing, please read the [code of conduct](CODE_OF_CONDUCT.md).
-
