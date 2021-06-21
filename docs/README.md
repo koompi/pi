@@ -8,7 +8,7 @@
 ## Description
 
 Pi is a package manager built in order to manage packages for KOOMPI Linux. This package manager
-is fully written in Rust. The package building script is difference from the others. That why we believe at some point this package manager will stand out. Packages are built and installed into a temporary location usingDESTDIR method and are afterwards generate into an *.app.
+is fully written in Rust. The package building script is difference from the others. That why we believe at some point this package manager will stand out. Packages are built and installed into a temporary location using DESTDIR method and are afterwards generate into an *.app.
 
 Installing the *.app means it is extracted into real system. After that all files extracted is recorded into an database. So Pi will track all installed files. Pi can automatically resolve dependencies order. Pi
 reads the build script (pkgbuild.yml) in order to get all necessary variables and functions before building
@@ -19,34 +19,34 @@ them.
 `pkgbuild.yml` is build script sourced by `Pi Package Manager` to build the package.
 The example of `pkgbuild.yml` as follows:
 
----
-metadata:
-    name: neofetch
-    version: 7.1.0
-    release: 1
-    description: A CLI system information tool written in BASH that supports displaying images.
-    architecture:
-        - x86_64
-    licenses:
-        - MIT
-    project_url:
-        - https://github.com/dylanaraps/neofetch
-    project_ownder: []
-sources:
-    - address: "git://github.com/dylanaraps/neofetch"
-      save_as: neofetch
-      extract: false
-      extract_to: ""
-security: ~
-dependencies: ~
-prepare: ~
-build: ~
-check: ~
-package:
-    commands:
-        - cd "${SRCDIR}/${PKGNAME}"
-        - make DESTDIR=${PKGDIR} install
-deployment: ~
+	---
+	metadata:
+	    name: neofetch
+	    version: 7.1.0
+	    release: 1
+	    description: A CLI system information tool written in BASH that supports displaying images.
+	    architecture:
+	        - x86_64
+	    licenses:
+	        - MIT
+	    project_url:
+	        - https://github.com/dylanaraps/neofetch
+	    project_ownder: []
+	sources:
+	    - address: "git://github.com/dylanaraps/neofetch"
+	      save_as: neofetch
+	      extract: false
+	      extract_to: ""
+	security: ~
+	dependencies: ~
+	prepare: ~
+	build: ~
+	check: ~
+	package:
+	    commands:
+	        - cd "${SRCDIR}/${PKGNAME}"
+	        - make DESTDIR=${PKGDIR} install
+	deployment: ~
 
 
 
