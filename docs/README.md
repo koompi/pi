@@ -75,15 +75,15 @@ The example of `pkgbuild.yml` as follows:
 
 ### Generate server config
 
-    ```bash
-    server config
-    ```
+```console
+server config
+```
 ### Run the server
 
-    ```bash
-    server -g
-    ```
-    note* for the first time, it requires to run -g arg*
+```console
+server -g
+```
+note* for the first time, it requires to run -g arg*
 
 ## Bin-repo:
 
@@ -91,69 +91,57 @@ The example of `pkgbuild.yml` as follows:
 
 `To generate a new binary repo.`
 
-    ```bash
-    sudo bin-repo create /var/www/repo_name/repo_name.db
-    ```
+```console
+sudo bin-repo create /var/www/repo_name/repo_name.db
+
+```
+
 `To add the package.app to the repo`
 
-    ```bash
-    sudo bin-repo add /var/www/repo_name/repo_name.db package.app
-    ```
+```console
+sudo bin-repo add /var/www/repo_name/repo_name.db package.app
+```
 
 `To remove the package.app from the repo`
 
-    ```bash
-    sudo bin-repo remove /var/www/repo_name/repo_name.db package_name
-    ```
+```console
+sudo bin-repo remove /var/www/repo_name/repo_name.db package_name
+```
 
 ## Pi:
 
 ### Generate pkgbuild.yml template.
 
-    ```bash
-    pi g
-    ```
+```console
+pi g
+```
 
 ### Build Port
 
 - After generate the template, you can modify it for the package you want to port.
 
-    ```bash
-    pi build
-    ```
-- After you finish building, there will a new package with a `.app` extenstion. Now it is time to register it to the repo.
-
-
-    ```bash
-    bin-repo add rootfs/var/www/repo_name/repo_name.db package.app
-    bin-repo remove rootfs/var/www/repo_name/repo_name.db package_name
-    ```
+```console
+pi build
+```
+- After you finish building, there will a new package with a `.app` extenstion. Now you can register the package.app to the repo.
 
 ### Install App
 
-    ```bash
-    pi install package_name
-    ```
+```console
+pi install package_name
+```
 
 ### Remove App
 
-    ```bash
-    pi remove package_name
-    ```
-
+```console
+pi remove package_name
+```
 
 ### Update Repo
 
-    ```bash
-    pi update
-    ```
-
-
-
-
-
-
-
+```console
+pi update
+```
 
 
 ## pkgbuild.yml variables
