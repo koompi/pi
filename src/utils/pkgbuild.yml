@@ -1,0 +1,55 @@
+---
+metadata:
+  name: "sudo"
+  version: "1.9.6p1"
+  release: 1
+  description: Give certain users the ability to run some commands as root
+  architecture:
+        - x86_64
+  licenses:
+        - GPL
+  project_url:
+        - https://www.sudo.ws/sudo/
+  project_ownder:
+        - Robert Coggeshall, Cliff Spencer
+sources:
+      - address: "https://www.sudo.ws/dist/sudo-1.9.6p1.tar.gz"
+        save_as: sudo-1.9.6_p1.tar.gz
+        extract: true
+        extract_to: ""
+      - address: "https://www.sudo.ws/dist/sudo-1.9.6p1.patch.gz"
+        save_as: sudo-1.9.6p1.patch.gz
+        extract: false
+        extract_to: ""
+security: ~
+dependencies: ~
+prepare: ~
+build: ~
+check: ~
+package:
+  commands:
+        - |
+          cd $SRCDIR/$PKGNAME-$PKGVER
+          ./configure \
+              --prefix=/usr \
+                      --libexecdir=/usr/lib \
+                      --with-secure-path \
+                      --with-all-insults \
+                      --with-env-editor \
+              --disable-nls
+                     # --with-passprompt="[sudo] password for %p: "
+              make
+              make DESTDIR=$PKGDIR install
+
+              ln -sfv libsudo_util.so.0.0.0 $PKGDIR/usr/lib/sudo/libsudo_util.so.0
+
+              mkdir -m 755 $PKGDIR/etc/pam.d
+              install -D -m 644 -o root -g root ../../files/sudo $PKGDIR/etc/pam.d/sudo
+
+              sed -i 's/# %wheel ALL=(ALL) ALL/%wheel ALL=(ALL) ALL/' $PKGDIR/etc/sudoers
+
+          rm -fr $PKGDIR/var/run
+          rm -fr $PKGDIR/run/sudo
+          install -Dm4755 $PKGDIR/usr/bin/sudo $PKGDIR/usr/sbin
+          # chown root:root /usr/bin/sudo && chmod 4755 /usr/bin/sudo
+deployment: ~

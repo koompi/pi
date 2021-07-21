@@ -34,6 +34,8 @@ pub fn extract_archive(arg_file: &str, dest: &str) -> Result<()> {
                         .unwrap();
                 }
                 _ => {
+                    f.set_unpack_xattrs(true);
+                    f.set_preserve_permissions(true);
                     f.unpack(Path::new(dest).join(&p))?;
                 }
             };
