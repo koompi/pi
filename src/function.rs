@@ -16,8 +16,10 @@ impl Function {
         // Commands to  execute
         // let mut commands = self.commands.clone();
         let mut commands = Vec::new();
+        // commands.push(String::from("bash"));
         commands.push(String::from("set -e"));
         commands.push(String::from("fakeroot"));
+        commands.push(String::from("echo $SHELL"));
         commands.append(self.commands.clone().as_mut());
         commands.push(String::from("exit"));
         let cmds = &self.commands.join("\n").to_string();
@@ -38,7 +40,9 @@ impl Function {
         env::set_var("BASEDIR", basedir);
         env::set_var("SRCDIR", srcdir);
         env::set_var("PKGDIR", pkgdir);
-
+        env::set_var("SHELL", "/bin/bash");
+            
+        // Exec::cmd("bash").arg("-c").args(&commands).join().unwrap();
         match Exec::shell(cmds).join() {
             Ok(ex) => match ex.success() {
                 true => Ok(()),
@@ -64,6 +68,11 @@ impl Function {
             Err(e) => Err(Box::new(e)),
         }
 
+
+
+
+
+
         // match run(cmd, basedir, srcdir, pkgdir, &pkgname, &pkgver, *pkgrel) {
         //     Ok(d) => {
         //         d.for_each(|res| {
@@ -72,6 +81,7 @@ impl Function {
         //     }
         //     Err(e) => println!("{}", e.to_string().on_red()),
         // }
+        // Ok(())
     }
 }
 

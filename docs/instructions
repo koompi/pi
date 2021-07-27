@@ -19,8 +19,7 @@
 3. Run the server
 
     ```bash
-    cargo run --bin server
-    ```
+    cargo run --bin server ```
 
 4. Generate pkgbuild.yml template.
 
@@ -56,3 +55,20 @@
     cargo run --bin pi -- install the_app_name
     cargo run --bin pi -- remove the app_name
     ```
+
+
+
+
+
+
+
+
+
+
+
+
+
+    temp
+
+              --with-passprompt=\"[sudo] password for %p: \"
+	      put \ before string and one more inside string
