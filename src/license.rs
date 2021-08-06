@@ -11,6 +11,7 @@ pub enum License {
     MPL2,
     CDDL,
     EPL2,
+    PSF,
 }
 
 impl Default for License {
