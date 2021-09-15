@@ -12,6 +12,7 @@ pub enum License {
     CDDL,
     EPL2,
     PSF,
+    CUSTOM,
 }
 
 impl Default for License {
