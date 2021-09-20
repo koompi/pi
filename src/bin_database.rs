@@ -98,7 +98,10 @@ impl BinDatabase {
             for package in packages.iter() {
                 if let Ok(nodes) = rd.dependencies_of(package) {
                     for node in nodes {
-                        to_install_name.push(node.unwrap().to_string())
+                        // to_install_name.push(node.unwrap().to_string())
+                        if let Ok(node) = node {
+                            to_install_name.push(node.to_string())
+                        }
                     }
                 }
             }
